@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pitch deck scan · SeriesBio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+  .file { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 14px; background: var(--card-2); border: 1px solid var(--line); }
+  .file .doc { width: 38px; height: 46px; border-radius: 6px; border: 1.5px solid var(--fg-2); position: relative; flex: none; }
+  .file .doc::after { content: "PDF"; position: absolute; left: 4px; right: 4px; bottom: 6px; font: 600 9px var(--mono); background: var(--fg); color: #000; text-align: center; border-radius: 2px; }
+  .drop.over { border-color: var(--fg); }
+  .finding h4 { font-size: 16px; margin: 8px 0 6px; }
+  .finding p { font-size: 14px; color: var(--fg-2); }
+  .scanning { display: flex; align-items: center; gap: 12px; padding: 18px; }
+  .spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line-2); border-top-color: var(--fg); animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<main class="wrap enter">
+  <div class="page-head">
+    <span class="eyebrow">Pitch deck · Listing check 1 of 5</span>
+    <h1>Upload the deck you<br>would send before an NDA</h1>
+    <p class="lead">Every upload is scanned before it is stored. Anything that looks confidential stops here – it never reaches an investor.</p>
+  </div>
+
+  <div class="grid-main">
+    <div class="stack" id="main"></div>
+    <aside class="stack sticky" id="side"></aside>
+  </div>
+  <input type="file" id="file" accept="application/pdf" hidden>
+</main>
+
+<script src="../src/scoring.js"></script>
+<script src="../src/examples.js"></script>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script>
+/* Confidentiality scan rules – dev brief §6 */
+var RULES = {
+  block: [
+    { id: 'nt', rx: /[ACGTU]{20,}/, title: function (m) { return 'Sequence-like string found (' + m[0].length + ' nucleotide letters)'; }, text: 'Sequences, structures and constructs are never stored on SeriesBio. Remove the string from the slide and upload a new version.' },
+    { id: 'aa', rx: /[ACDEFGHIKLMNPQRSTVWY]{30,}/, title: function (m) { return 'Amino-acid sequence found (' + m[0].length + ' letters)'; }, text: 'Protein sequences are never stored. Remove the string from the slide and upload a new version.' },
+    { id: 'seqid', rx: /SEQ\s*ID\s*NO/i, title: function () { return '“SEQ ID NO” reference found'; }, text: 'Patent sequence listings are confidential until published. Remove the reference and upload a new version.' },
+    { id: 'smiles', rx: /(?=[^\s]*[=#])(?=[^\s]*\()[BCNOPSFIclbrn0-9@+\-\[\]\(\)=#\\\/]{15,}/, title: function () { return 'Chemical structure string (SMILES-like) found'; }, text: 'Structures are never stored. Describe what the molecule does instead and upload a new version.' }
+  ],
+  check: [
+    { id: 'kw', rx: /\b((?<!non-)(?<!non )confidential|proprietary|do not distribute|under CDA|trade secret)\b/i, title: function (m) { return 'The word “' + m[0].toLowerCase() + '” appears on this slide'; }, text: 'If the slide only says that a method is proprietary, confirm it. If it shows the method itself, replace the slide.' },
+    { id: 'fin', rx: /\b(P&L|profit and loss|cash ?flow statement|balance sheet|income statement)\b/i, title: function () { return 'Financial statement detected'; }, text: 'P&L, cash flow and other statements stay off the platform. Use ranges in the Startup CV instead.' }
+  ]
+};
+var LOOK_FOR = [
+  ['Non-confidential label on the title slide', /non-?confidential/i, true],
+  ['Problem and unmet need', /problem|unmet need|patients? (need|suffer)/i],
+  ['Solution – what it does, not how', /solution|our approach|product|candidate/i],
+  ['Evidence summary', /data|evidence|proof of concept|results|efficacy/i],
+  ['Pipeline and milestones', /pipeline|milestone|roadmap/i],
+  ['IP status', /patent|\bIP\b|intellectual property|licen[cs]e/i],
+  ['Regulatory path', /regulatory|\bIND\b|\bCTA\b|FDA|EMA|orphan/i, false, 'Often missing in seed decks'],
+  ['Team and advisors', /team|advisor|founder/i],
+  ['Market and competition', /market|competition|competitor|landscape/i],
+  ['Comparable partnering or M&A deals', /partnering|M&A|acquisition|licensing deal|comparable/i, false, 'Partnering or acquisition is the likely exit'],
+  ['Ask and use of funds by milestone', /use of funds|the ask|raising|funding|investment/i],
+  ['No P&L or financial statements', null]
+];
+var DEMO_V1 = [
+  { id: 'd1', kind: 'block', slide: 11, title: 'Sequence-like string found (27 nucleotide letters)', text: RULES.block[0].text, resolved: false },
+  { id: 'd2', kind: 'check', slide: 7, title: 'The word “proprietary” appears on this slide', text: RULES.check[0].text, resolved: false }
+];
+var DEMO_CHECKLIST = LOOK_FOR.map(function (l, i) { return i === 6 || i === 9 ? false : true; });
+
+SB.init().then(function () {
+  SB.shell('startup', 'deck');
+  var st = SB.state, d = st.deck, esc = SB.esc;
+  var scanning = false;
+
+  function openFindings() { return (d.findings || []).filter(function (f) { return !f.resolved; }); }
+
+  function draw() {
+    var open = openFindings();
+    var cleared = d.uploaded && d.attested && !open.length;
+    var hasBlock = open.some(function (f) { return f.kind === 'block'; });
+
+    var findings = scanning ? '<div class="scanning"><span class="spinner"></span>Reading slides and checking for confidential content…</div>'
+      : !(d.findings || []).length ? '<div class="finding ok"><b>No findings.</b><p style="margin-top:4px">Nothing that looks like a sequence, structure, financial statement or confidential label.</p></div>'
+      : d.findings.map(function (f) {
+        if (f.resolved) return '<div class="finding ok small"><span class="badge ok">Resolved</span> <span class="mono tiny muted">Slide ' + f.slide + '</span> &nbsp;' + esc(f.title) + '</div>';
+        var block = f.kind === 'block';
+        return '<div class="finding ' + (block ? 'bad' : 'warn') + '"><div class="row" style="gap:8px"><span class="badge ' + (block ? 'bad' : 'warn') + '">' + (block ? 'Blocked' : 'Check') + '</span><span class="mono tiny muted">Slide ' + f.slide + '</span></div>' +
+          '<h4>' + esc(f.title) + '</h4><p>' + esc(f.text) + '</p>' + (f.snippet ? '<p class="mono tiny muted" style="margin-top:6px">…' + esc(f.snippet) + '…</p>' : '') +
+          '<div class="row" style="margin-top:14px">' + (block
+            ? '<button class="btn sm" data-upload>Upload the corrected deck</button>' + (d.source === 'demo' ? '<button class="btn sm" data-fix="' + f.id + '">Simulate corrected upload</button>' : '')
+            : '<button class="btn sm" data-resolve="' + f.id + '">It is public – confirm</button><button class="btn sm" data-upload>Replace the file</button>') + '</div></div>';
+      }).join('');
+
+    var status = cleared ? '<span class="badge ok">✓ Deck cleared – listing check passed</span>'
+      : open.length ? '<span class="tiny" style="color:var(--warn)">Resolve ' + (open.length === 1 ? 'the open finding' : 'all ' + open.length + ' open findings') + ' and confirm the statement to clear the deck.</span>'
+      : '<span class="tiny" style="color:var(--warn)">Confirm the statement to clear the deck.</span>';
+
+    document.getElementById('main').innerHTML =
+      '<div class="card drop" id="drop"><h2 style="margin-bottom:16px">Your deck</h2>' +
+        '<div class="file"><span class="doc"></span><div style="flex:1;min-width:0"><b style="word-break:break-all">' + esc(d.file) + '</b><div class="muted small">' + d.slides + ' slides · PDF · ' + (d.source === 'upload' ? 'scanned in your browser' : 'uploaded today') + '</div></div>' +
+        '<button class="btn" data-upload>Upload a new version</button></div>' +
+        '<p class="muted tiny" style="margin-top:14px">PDF only · up to 25 MB · ideally no more than 15 main slides · the title slide says “Non-confidential” · no P&amp;L, cash flow or other financial statements. Drop a PDF here – it is scanned locally and never leaves your browser in this demo.</p>' +
+        (d.source !== 'demo' || (d.findings || []).length ? '' : '<button class="btn sm" style="margin-top:12px" data-replay>Replay the v1 scan (with findings)</button>') + '</div>' +
+      '<div class="card"><div class="between" style="margin-bottom:16px"><h2>Confidentiality scan</h2><span class="muted small">' + (open.length ? open.length + ' finding' + (open.length > 1 ? 's' : '') + ' need you' : 'All clear') + '</span></div>' +
+        '<div class="stack" style="gap:12px">' + findings + '</div>' +
+        '<div class="notice small" style="margin-top:12px"><span class="ico todo"></span>Removed before storage: author names, speaker notes and comments in the file.</div></div>' +
+      '<div class="card"><h2 style="margin-bottom:14px">Confirm before listing</h2>' +
+        '<label class="check ' + (d.attested ? 'on' : '') + '" data-attest style="background:transparent;border:0;padding:0"><span class="box">' + (d.attested ? '✓' : '') + '</span><span>This deck contains no confidential information. Everything in it may be shared with verified investors without an NDA.</span></label>' +
+        '<div style="margin-top:16px">' + status + '</div>' + (cleared ? '<a class="btn primary" style="margin-top:16px" href="cv.html">Back to the Startup CV →</a>' : '') + '</div>';
+
+    var checklist = d.checklist || DEMO_CHECKLIST;
+    document.getElementById('side').innerHTML =
+      '<div class="card"><h3>What investors look for</h3><p class="muted tiny" style="margin:4px 0 14px">Read from your slides. Not scored – a checklist for a stronger deck.</p><ul class="list">' +
+        LOOK_FOR.map(function (l, i) {
+          var ok = checklist[i];
+          return '<li><span class="ico ' + (ok ? 'ok' : 'todo') + '">' + (ok ? '✓' : '') + '</span><div>' + esc(l[0]) + (!ok && l[3] ? '<div class="tiny" style="color:var(--warn)">' + l[3] + '</div>' : '') + '</div></li>';
+        }).join('') + '</ul></div>' +
+      '<div class="card"><h3 style="margin-bottom:12px">Who can open it</h3><ul class="bullets small" style="margin-bottom:16px"><li>Verified investors only</li><li>Every page watermarked with the viewer’s name and fund</li><li>You see each investor who opens it</li></ul>' +
+        '<div class="between" style="border-top:1px solid var(--line);padding-top:14px;align-items:center"><span class="small">Allow download</span><button class="toggle ' + (d.allowDownload ? 'on' : '') + '" data-dl aria-label="Allow download"></button></div></div>';
+  }
+
+  /* ---------- real scan with pdf.js ---------- */
+  function loadPdfJs() {
+    if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+    return new Promise(function (res, rej) {
+      var s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      s.onload = function () { pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; res(pdfjsLib); };
+      s.onerror = rej; document.head.appendChild(s);
+    });
+  }
+
+  async function scan(file) {
+    if (!file || !/pdf$/i.test(file.type || file.name)) { SB.toast('PDF only, please'); return; }
+    if (file.size > 25 * 1024 * 1024) { SB.toast('Up to 25 MB'); return; }
+    scanning = true; draw();
+    try {
+      var lib = await loadPdfJs();
+      var pdf = await lib.getDocument({ data: await file.arrayBuffer() }).promise;
+      var pages = [];
+      for (var p = 1; p <= pdf.numPages; p++) {
+        var tc = await (await pdf.getPage(p)).getTextContent();
+        pages.push(tc.items.map(function (i) { return i.str; }).join(' '));
+      }
+      var findings = [];
+      pages.forEach(function (text, i) {
+        var compact = text.replace(/\s+/g, '');
+        ['block', 'check'].forEach(function (kind) {
+          RULES[kind].forEach(function (r) {
+            var m = (r.id === 'nt' || r.id === 'aa' ? compact : text).match(r.rx);
+            // a nucleotide run is also valid amino-acid letters: only flag protein when other residues dominate
+            if (m && r.id === 'aa' && m[0].replace(/[ACGTU]/g, '').length < m[0].length / 2) m = null;
+            if (m) findings.push({ id: r.id + i, kind: kind, slide: i + 1, title: r.title(m), text: r.text, snippet: m[0].slice(0, 40), resolved: false });
+          });
+        });
+      });
+      var all = pages.join('\n');
+      d.checklist = LOOK_FOR.map(function (l, i) {
+        if (!l[1]) return !findings.some(function (f) { return f.id.indexOf('fin') === 0; });
+        return l[2] ? l[1].test(pages[0] || '') : l[1].test(all);
+      });
+      Object.assign(d, { file: file.name, slides: pdf.numPages, uploaded: true, attested: false, findings: findings, source: 'upload' });
+      SB.save();
+      SB.toast(findings.length ? findings.length + ' finding' + (findings.length > 1 ? 's' : '') + ' to review' : 'No confidential content found');
+    } catch (err) {
+      console.error(err); SB.toast('Could not read this PDF');
+    }
+    scanning = false; draw();
+  }
+
+  var input = document.getElementById('file');
+  input.addEventListener('change', function () { scan(input.files[0]); input.value = ''; });
+  document.addEventListener('dragover', function (e) { e.preventDefault(); var dr = document.getElementById('drop'); if (dr) dr.classList.add('over'); });
+  document.addEventListener('dragleave', function () { var dr = document.getElementById('drop'); if (dr) dr.classList.remove('over'); });
+  document.addEventListener('drop', function (e) { e.preventDefault(); scan(e.dataTransfer.files[0]); });
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-upload],[data-fix],[data-resolve],[data-attest],[data-dl],[data-replay]');
+    if (!t) return;
+    if (t.hasAttribute('data-upload')) { input.click(); return; }
+    if (t.dataset.fix) { d.findings.forEach(function (f) { if (f.id === t.dataset.fix) f.resolved = true; }); d.file = 'Nuvaris_NonConfidential_Deck_v2.pdf'; SB.toast('Corrected deck uploaded and re-scanned'); }
+    else if (t.dataset.resolve) d.findings.forEach(function (f) { if (f.id === t.dataset.resolve) f.resolved = true; });
+    else if (t.hasAttribute('data-attest')) d.attested = !d.attested;
+    else if (t.hasAttribute('data-dl')) d.allowDownload = !d.allowDownload;
+    else if (t.hasAttribute('data-replay')) Object.assign(d, { file: 'Nuvaris_NonConfidential_Deck_v1.pdf', findings: JSON.parse(JSON.stringify(DEMO_V1)), attested: false, checklist: null, source: 'demo' });
+    SB.save(); draw();
+  });
+
+  draw();
+});
+</script>
+</body>
+</html>

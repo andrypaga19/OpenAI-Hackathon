@@ -1,0 +1,98 @@
+{
+  "version": "addon-1.0",
+  "note": "All thresholds, cost ranges, probabilities and the institution list are demo assumptions. Calibrate with investors before real use.",
+
+  "modalityCostGroup": { "SM": "sm", "BI": "bio", "RN": "bio", "PL": "bio", "CT": "cgt", "GT": "cgt" },
+
+  "milestones": [
+    { "id": "in_vivo_poc", "label": "In vivo proof of concept", "costEurM": { "sm": [0.5, 1.5], "bio": [1, 2], "cgt": [1, 3] }, "months": [9, 15] },
+    { "id": "development_candidate", "label": "Development candidate", "costEurM": { "sm": [1.5, 4], "bio": [2, 5], "cgt": [3, 6] }, "months": [12, 24] },
+    { "id": "ind_enabling_complete", "label": "IND/CTA-enabling complete", "costEurM": { "sm": [3, 8], "bio": [5, 12], "cgt": [8, 20] }, "months": [18, 30] },
+    { "id": "phase1_complete", "label": "Phase 1 complete", "costEurM": { "sm": [8, 20], "bio": [10, 25], "cgt": [15, 40] }, "months": [18, 30] },
+    { "id": "phase2a_readout", "label": "Phase 2a readout", "costEurM": { "sm": [20, 50], "bio": [25, 60], "cgt": [30, 80] }, "months": [24, 36] }
+  ],
+  "defaultNextMilestoneByBand": { "D1": "development_candidate", "D2": "ind_enabling_complete", "D3": "phase1_complete", "D4": "phase2a_readout" },
+  "reachedMilestoneIndexByBand": { "D1": -1, "D2": 0, "D3": 1, "D4": 2 },
+  "monthsToRaiseNextRound": 6,
+  "roundStepEur": 500000,
+  "grantSuggestions": {
+    "DE": ["EXIST Forschungstransfer", "GO-Bio (BMBF)", "HTGF", "EIC Pathfinder / Accelerator"],
+    "default": ["EIC Accelerator", "National innovation agency grants"]
+  },
+
+  "team": {
+    "yearsBands": [[1, 15], [4, 35], [10, 55], [20, 65]],
+    "degreeScience": { "phd": 30, "md_phd": 35, "md": 25, "msc": 15, "bsc": 5 },
+    "institutionTiers": {
+      "top": ["Max Planck", "Charité", "ETH Zurich", "EPFL", "Karolinska", "EMBL", "Weizmann", "Oxford", "Cambridge", "Imperial College", "Harvard", "MIT", "Stanford", "UCSF", "Broad Institute", "Institut Pasteur", "Helmholtz", "DKFZ", "LMU", "TUM", "Heidelberg"],
+      "strong": ["Fraunhofer", "Leibniz", "Humboldt", "FU Berlin", "TU Berlin", "University of", "Universität"]
+    },
+    "institutionPoints": { "top": 20, "strong": 10, "other": 0 },
+    "hIndexBands": [[5, 5], [15, 10], [30, 15]],
+    "capitalRaisedBands": [[1000000, 10], [10000000, 20], [50000000, 30]],
+    "partTimeFactor": 0.6,
+    "unprovenCap": 50,
+    "competencyThreshold": 40,
+    "requiredCompetencies": { "D1": ["science"], "D2": ["science", "commercial"], "D3": ["science", "commercial", "translational"], "D4": ["science", "commercial", "translational", "leadership"] },
+    "stageWeights": {
+      "D1": { "science": 0.45, "translational": 0.15, "commercial": 0.15, "entrepreneurial": 0.15, "leadership": 0.10 },
+      "D2": { "science": 0.35, "translational": 0.15, "commercial": 0.25, "entrepreneurial": 0.10, "leadership": 0.15 },
+      "D3": { "science": 0.20, "translational": 0.30, "commercial": 0.25, "entrepreneurial": 0.10, "leadership": 0.15 },
+      "D4": { "science": 0.15, "translational": 0.30, "commercial": 0.25, "entrepreneurial": 0.10, "leadership": 0.20 }
+    },
+    "typicalHire": {
+      "science": { "name": "CSO (what-if)", "role": "cso", "fulltime": true, "highestDegree": "phd", "domainMatch": true, "hIndex": 20, "backgroundYears": { "academia": 10 }, "evidence": ["linkedin"] },
+      "commercial": { "name": "CBO (what-if)", "role": "cbo", "fulltime": true, "highestDegree": "mba", "backgroundYears": { "industryCommercial": 8 }, "dealsClosed": 2, "seniorRole": true, "evidence": ["linkedin"] },
+      "translational": { "name": "CMO (what-if)", "role": "cmo", "fulltime": true, "highestDegree": "md", "backgroundYears": { "industryRnd": 10 }, "programsToClinic": 2, "seniorRole": true, "evidence": ["linkedin"] },
+      "leadership": { "name": "Experienced CEO (what-if)", "role": "other", "fulltime": true, "seniorRole": true, "peopleLed": 20, "backgroundYears": { "industryCommercial": 15 }, "evidence": ["linkedin"] },
+      "entrepreneurial": { "name": "Serial founder (what-if)", "role": "other", "fulltime": true, "startupsFounded": 2, "exits": 1, "capitalRaisedEur": 20000000, "evidence": ["linkedin"] }
+    },
+    "hireText": {
+      "science": "a scientific lead (PhD/MD) with expertise in this indication or modality",
+      "commercial": "a CBO/COO with 4+ years in pharma BD, VC or consulting (or a senior commercial advisor as a first step)",
+      "translational": "a Head of Development or CMO who has taken a program into the clinic",
+      "leadership": "an experienced CEO or board member with previous VP/C-level roles",
+      "entrepreneurial": "a co-founder or board member with startup or exit experience"
+    }
+  },
+
+  "market": {
+    "shareScenariosPct": [1, 5, 10],
+    "baseCaseSharePct": 5,
+    "credibleShareMaxPct": { "firstInClass": 30, "followOn": 15 },
+    "posByBand": { "D1": 0.02, "D2": 0.05, "D3": 0.07, "D4": 0.12 },
+    "areaFactor": { "oncology": 0.5, "rare_disease": 1.3, "infectious": 1.5, "cns": 0.7, "immunology": 1.0, "cardiometabolic": 0.9, "other": 1.0 },
+    "scoreBands": [[0, 10], [20000000, 25], [50000000, 50], [100000000, 75], [250000000, 100]],
+    "smallInfoEur": 100000000,
+    "smallStrongEur": 50000000
+  },
+
+  "ip": {
+    "yearsToMarketByBand": { "D1": 11, "D2": 10, "D3": 8, "D4": 6 },
+    "ip06Points": [[10, 1], [6, 0.7], [-100, 0.3]],
+    "institutionEquityWarnPct": 20,
+    "institutionEquityInfoPct": 10
+  },
+
+  "gapToValueAdd": {
+    "commercial_leadership": ["ceo_recruiting", "venture_building"],
+    "translational": ["cro_network", "lab_access", "regulatory_expertise"],
+    "science": ["scientific_network", "lab_access"],
+    "ip_licensing": ["tto_negotiation", "ip_expertise"],
+    "cap_table": ["cap_table_restructuring", "venture_building"],
+    "regulatory": ["regulatory_expertise"],
+    "funding_gap": ["syndicate_network", "grant_expertise"],
+    "market": ["pharma_network", "market_access"],
+    "syndication": ["syndicate_network"]
+  },
+
+  "syndicate": {
+    "minMatch": 50,
+    "leadMinShare": 0.25,
+    "leadMaxMinTicketShare": 0.6,
+    "leadTargetShare": 0.4,
+    "maxMembers": 5,
+    "maxLeadCandidates": 5,
+    "top": 3
+  }
+}

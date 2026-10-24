@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Startup CV · SeriesBio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+  .q.flash { animation: flash 1.4s var(--ease); }
+  @keyframes flash { 0%, 40% { border-color: rgba(255,255,255,0.7); } }
+  .step { display: flex; justify-content: space-between; gap: 12px; align-items: center; width: 100%; text-align: left;
+    padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card-2); cursor: pointer; font-size: 13px; }
+  .step:hover { border-color: var(--line-2); }
+  .step .gain { font: 12px var(--mono); white-space: nowrap; }
+  .member { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+  .competency { display: grid; grid-template-columns: 110px 1fr 34px; gap: 10px; align-items: center; font-size: 12px; }
+  .progress { width: 220px; }
+</style>
+</head>
+<body>
+<main class="wrap enter">
+  <div class="between page-head" style="flex-direction:row;align-items:flex-end;flex-wrap:wrap">
+    <div class="stack" style="gap:12px">
+      <span class="eyebrow">Startup CV · Nuvaris Therapeutics</span>
+      <h1 style="font-size:clamp(30px,3.6vw,44px)">Build the profile investors read before any NDA</h1>
+      <div class="row" id="tags"></div>
+    </div>
+    <div class="row" style="align-items:flex-end">
+      <div class="progress small"><div class="muted tiny" id="progress-label" style="margin-bottom:6px"></div><div class="bar"><i id="progress-bar"></i></div></div>
+      <a class="btn" href="onboarding.html">Change stage</a>
+      <a class="btn primary" href="profile.html">Preview as investor</a>
+    </div>
+  </div>
+
+  <div class="notice" style="margin-bottom:28px">
+    <span class="ico ok">✓</span>
+    <div><b>Non-confidential by design.</b> Verified investors can read everything you enter here without an NDA. Say what your science does, never how – no structures, sequences or unpublished data.</div>
+  </div>
+
+  <div class="grid-3col">
+    <nav class="sidenav sticky" id="nav"></nav>
+    <section class="stack" id="section"></section>
+    <aside class="stack sticky rail" id="rail"></aside>
+  </div>
+</main>
+
+<script src="../src/scoring.js"></script>
+<script src="../src/examples.js"></script>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script>
+SB.init().then(function () {
+  SB.shell('startup', 'cv');
+  var S = SB.S, bank = SB.bank, st = SB.state, esc = SB.esc;
+  var cur = null;            // current section: dimension id or 'MOD'
+  var ev, ad;
+
+  function bandIdx() { return S.BANDS.indexOf(ev.r.band); }
+  function visible() { return S.visibleQuestions(bank, ev.r.band, new Set(ev.r.modules)); }
+  function req(q) { return q.req[bandIdx()]; }
+  function score(q) { return S.answerScore(q, st.answers[q.id], ev.r.band); }
+
+  /* ---------- question cards ---------- */
+
+  function proofField(q, typeKey, value, attrs) {
+    var pt = bank.proofTypes[typeKey];
+    var status = !value ? '<span class="badge warn">Missing proof</span>'
+      : value.verified ? '<span class="badge ok">✓ Registry-verified</span>' : '<span class="badge info">Linked</span>';
+    return '<div class="field"><label>' + esc(pt ? pt.label : 'Public identifier') + (pt && pt.check ? ' · checked via ' + esc(pt.check.split(' ')[0] + ' ' + (pt.check.split(' ')[1] || '')) : '') + '</label>' +
+      '<div class="proof"><input class="input" ' + attrs + ' placeholder="' + (typeKey === 'doi' ? '10.xxxx/…' : typeKey === 'trial' ? 'NCT…' : typeKey === 'patent' ? 'EP… / WO…' : 'https://…') + '" value="' + esc(value ? value.value : '') + '">' + status + '</div></div>';
+  }
+
+  function qCard(q) {
+    var a = st.answers[q.id], s = score(q), r = req(q);
+    var head = '<div class="meta"><div class="row" style="gap:8px"><span class="id">' + q.id + '</span>' +
+      (r === 'R' ? '<span class="tiny">Required</span>' : '<span class="tiny muted">Optional bonus</span>') +
+      (q.module !== 'core' ? '<span class="tiny muted">· ' + esc(bank.modules[q.module].name) + ' module</span>' : '') + '</div>' +
+      (q.scored === false ? '<span class="tiny muted mono">Descriptive</span>' : '<span class="tiny mono ' + (s.answered ? '' : 'muted') + '">Scores ' + (+(s.points || 0).toFixed(2)) + ' of 1' + (s.capped ? ' · capped' : '') + '</span>') + '</div>' +
+      '<div class="prompt">' + esc(q.prompt) + '</div>' + (q.help ? '<div class="help">' + esc(q.help) + '</div>' : '');
+    var body = '';
+
+    if (q.type === 'checklist') {
+      var have = (a && a.items) || [], exp = q.expected[ev.r.band] || [];
+      body = '<div class="checks">' + q.items.map(function (it) {
+        var on = have.indexOf(it.key) >= 0, isExp = exp.indexOf(it.key) >= 0;
+        var sub = isExp ? 'Expected at ' + ev.r.band : it.proof ? 'Extra · needs a trial ID' : 'Extra · +0.05';
+        var proof = on && it.proof ? proofField(q, it.proof, a.proofs && a.proofs[it.key], 'data-proofitem="' + it.key + '" data-q="' + q.id + '"') : '';
+        return '<div class="check ' + (on ? 'on' : '') + '" data-q="' + q.id + '" data-item="' + it.key + '"><span class="box">' + (on ? '✓' : '') + '</span><div style="flex:1">' + esc(it.label) + '<small>' + sub + '</small>' + proof + '</div></div>';
+      }).join('') + '</div>';
+    } else if (q.type === 'number') {
+      body = '<div class="field" style="max-width:220px"><label>Months</label><input class="input" type="number" min="0" data-num="' + q.id + '" value="' + (a && a.value !== undefined ? a.value : '') + '"></div>' +
+        '<p class="muted tiny" style="margin-top:8px">' + q.bins.map(function (b, i) { return (i ? (q.bins[i - 1].max + 1) + '–' : '≤ ') + (b.max > 999 ? '' : b.max) + (b.max > 999 ? ' or more' : '') + ' months → ' + b.points; }).join(' · ').replace('–  or more', '+') + '</p>';
+    } else if (q.type === 'multi') {
+      var sel = (a && a.options) || [];
+      body = '<div class="opts">' + q.options.map(function (o, i) {
+        var on = sel.indexOf(i) >= 0;
+        return '<button class="chip ' + (on ? 'on' : '') + '" data-q="' + q.id + '" data-multi="' + i + '">' + (on ? '✓ ' : '') + esc(o.label) + (o.points !== undefined ? ' <span class="pts">' + o.points + '</span>' : '') + '</button>';
+      }).join('') + '</div>';
+    } else {
+      body = '<div class="opts">' + q.options.map(function (o, i) {
+        var on = a && a.option === i;
+        return '<button class="chip ' + (on ? 'on' : '') + '" data-q="' + q.id + '" data-opt="' + i + '">' + (on ? '✓ ' : '') + esc(o.label) +
+          (o.points !== undefined ? ' <span class="pts">' + o.points + (o.proof ? ' · ' + bank.proofTypes[o.proof].label.split(' ')[0] : '') + '</span>' : '') + '</button>';
+      }).join('') + '</div>';
+      var chosen = a && q.options[a.option];
+      if (chosen && chosen.proof) body += proofField(q, chosen.proof, a.proof, 'data-proof="' + q.id + '"');
+      if (q.scoring === 'withBullets') {
+        var bl = (a && a.bullets) || [];
+        body += [0, 1, 2].map(function (i) {
+          return '<div class="field"><label>Point ' + (i + 1) + '</label><input class="input" maxlength="120" data-bullet="' + i + '" data-q="' + q.id + '" value="' + esc(bl[i] || '') + '" placeholder="What it does, not how"></div>';
+        }).join('') + '<p class="muted tiny" style="margin-top:8px">Max 120 characters each. Fewer than three points scores 0.7× the option.</p>';
+      }
+    }
+    return '<article class="card q" id="q-' + q.id + '">' + head + body + '</article>';
+  }
+
+  /* ---------- add-on cards inside sections ---------- */
+
+  function teamCard() {
+    var t = ad.a.team;
+    return '<article class="card"><div class="card-head"><h3>Team model <span class="badge">add-on</span></h3><span class="mono small">' + t.score + ' / 100</span></div>' +
+      '<p class="muted small" style="margin-bottom:14px">Each member gets five competencies from structured background data. TM blends 50 % questions and 50 % this model in production.</p>' +
+      Object.keys(t.competencies).map(function (c) {
+        var v = t.competencies[c], miss = t.missing.indexOf(c) >= 0;
+        return '<div class="competency" style="margin-bottom:8px"><span style="text-transform:capitalize">' + c + '</span><div class="bar"><i style="width:' + v + '%;' + (miss ? 'background:var(--warn)' : '') + '"></i></div><span class="mono" style="text-align:right">' + v + '</span></div>';
+      }).join('') +
+      '<div class="stack" style="gap:8px;margin-top:14px">' + t.members.map(function (m) {
+        return '<div class="tile small"><b>' + esc(m.name) + '</b> <span class="muted">· ' + m.role.toUpperCase() + (m.fulltime ? ' · full-time' : ' · part-time') + ' · evidence: ' + esc(m.evidence) + '</span></div>';
+      }).join('') + '</div></article>';
+  }
+
+  function financeCard() {
+    var f = st.fin, cfg = SB.cfg, f11 = ad.f11;
+    var res = f11
+      ? '<div class="finding ' + (f11.severity === 'critical' ? 'bad' : 'warn') + ' small" style="margin-top:16px"><b>' + esc(f11.title) + '</b><br>' + esc(f11.evidence.summary) + '<br><span class="muted">Suggested round: </span><b>' + SB.eurM(f11.evidence.targetRoundEur) + '</b></div>'
+      : '<div class="finding ok small" style="margin-top:16px"><b>Your round reaches its milestone.</b> Round plus cash covers the typical cost of “' + esc((cfg.milestones.find(function (m) { return m.id === f.nextMilestone; }) || {}).label) + '” and your own burn until the next raise.</div>';
+    return '<article class="card"><div class="card-head"><h3>Round and milestone <span class="badge">financing check · F11</span></h3></div>' +
+      '<p class="muted small">Does this round fund the milestone it is meant to reach? Ranges, not exact figures – nothing here needs an NDA.</p>' +
+      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 12px">' +
+        '<div class="field"><label>Round size (€M)</label><input class="input" type="number" step="0.5" min="0" data-fin="sizeEur" data-scale="1000000" value="' + (f.sizeEur / 1e6) + '"></div>' +
+        '<div class="field"><label>Next milestone</label><select class="input" data-fin="nextMilestone">' + cfg.milestones.map(function (m) { return '<option value="' + m.id + '"' + (m.id === f.nextMilestone ? ' selected' : '') + '>' + esc(m.label) + '</option>'; }).join('') + '</select></div>' +
+        '<div class="field"><label>Months to milestone</label><input class="input" type="number" min="1" data-fin="monthsToMilestone" value="' + f.monthsToMilestone + '"></div>' +
+        '<div class="field"><label>Monthly burn (€k)</label><input class="input" type="number" step="10" min="0" data-fin="monthlyBurnEur" data-scale="1000" value="' + (f.monthlyBurnEur / 1000) + '"></div>' +
+        '<div class="field"><label>Runway today (months)</label><input class="input" type="number" min="0" data-fin="runwayMonths" value="' + f.runwayMonths + '"></div>' +
+      '</div>' + res + '</article>';
+  }
+
+  function marketCard() {
+    var m = ad.a.market;
+    return '<article class="card"><div class="card-head"><h3>Market model <span class="badge">add-on</span></h3><span class="mono small">' + m.score + ' / 100</span></div>' +
+      '<div class="tiles c3"><div class="tile"><div class="k">TAM</div><div class="v" style="font-size:20px">' + SB.eurBig(m.tamEur) + '</div></div>' +
+      '<div class="tile"><div class="k">SAM</div><div class="v" style="font-size:20px">' + SB.eurBig(m.samEur) + '</div></div>' +
+      '<div class="tile"><div class="k">Credible peak</div><div class="v" style="font-size:20px">' + SB.eurM(m.credibleCase.peakRevenueEur) + '</div></div></div>' +
+      '<p class="muted tiny" style="margin-top:10px">' + esc(m.summary || '') + '</p></article>';
+  }
+
+  /* ---------- nav, section, rail ---------- */
+
+  function sections() {
+    var vis = visible();
+    var list = bank.dimensions.map(function (d) {
+      var qs = vis.filter(function (q) { return q.dim === d.id && q.scored !== false; });
+      var answered = qs.filter(function (q) { return score(q).answered; }).length;
+      var openReq = qs.filter(function (q) { return req(q) === 'R' && !score(q).answered; }).length;
+      return { id: d.id, name: d.name, qs: qs, answered: answered, openReq: openReq };
+    }).filter(function (s) { return s.qs.length; });
+    var desc = vis.filter(function (q) { return q.scored === false; });
+    if (desc.length) list.push({ id: 'MOD', name: 'Modality details', qs: desc, answered: desc.filter(function (q) { return st.answers[q.id]; }).length, openReq: 0 });
+    return list;
+  }
+
+  function drawNav(secs) {
+    var deckOk = st.deck.uploaded && st.deck.attested && !(st.deck.findings || []).some(function (f) { return !f.resolved; });
+    document.getElementById('nav').innerHTML =
+      '<span class="eyebrow">Setup</span>' +
+      '<a href="onboarding.html">Stage and template <span class="c">✓</span></a>' +
+      '<a href="profile.html">Company profile <span class="c">18/18</span></a>' +
+      '<a href="deck.html">Pitch deck <span class="c" style="color:' + (deckOk ? 'inherit' : 'var(--warn)') + '">' + (deckOk ? '✓' : '!') + '</span></a>' +
+      '<span class="eyebrow">Scored sections</span>' +
+      secs.map(function (s) {
+        return '<a href="#' + s.id + '" data-sec="' + s.id + '" class="' + (s.id === cur ? 'on' : '') + '"><span>' + esc(s.name) +
+          (s.openReq ? '<span class="open">' + s.openReq + ' required open</span>' : '') + '</span><span class="c">' + s.answered + '/' + s.qs.length + '</span></a>';
+      }).join('');
+  }
+
+  function drawSection(secs) {
+    var s = secs.find(function (x) { return x.id === cur; }) || secs[0];
+    cur = s.id;
+    var d = ev.r.dims[s.id];
+    var head = '<div class="between" style="margin-bottom:4px"><div><h2 style="font-size:28px">' + esc(s.name) + '</h2>' +
+      (d ? '<p class="muted small" style="margin-top:4px">Weight at ' + ev.r.band + ': ' + d.weight + ' of 100 points · ' + d.required + ' required, ' + d.optional + ' optional</p>' : '') + '</div>' +
+      (d ? '<div style="text-align:right"><div style="font-size:26px;font-weight:600" class="num">' + d.points.toFixed(1) + ' <span class="muted" style="font-size:16px">/ ' + d.weight + '</span></div></div>' : '') + '</div>';
+    var extra = s.id === 'TM' ? teamCard() : s.id === 'FN' ? financeCard() : s.id === 'MK' ? marketCard() : '';
+    var order = s.qs.slice().sort(function (a, b) { return (req(a) === 'R' ? 0 : 1) - (req(b) === 'R' ? 0 : 1); });
+    document.getElementById('section').innerHTML = head + order.map(qCard).join('') + extra;
+  }
+
+  function coachCard(f) {
+    var sev = { critical: ['bad', 'Critical'], warning: ['warn', 'Warning'], open_question: ['info', 'Open question'], info: ['', 'Info'] }[f.severity] || ['', f.severity];
+    var acts = (f.actions || []).slice(0, f.checkId === 'F11' ? 5 : 3);
+    return '<div class="coach ' + f.severity + '"><div class="between"><span class="badge ' + sev[0] + '">' + sev[1] + '</span><span class="mono tiny muted">' + f.checkId + '</span></div>' +
+      '<h4>' + esc(f.title) + '</h4><p class="why">' + esc(f.why) + '</p>' +
+      (f.evidence && f.evidence.summary ? '<p class="small">' + esc(f.evidence.summary) + '</p>' : '') +
+      (acts.length ? '<ol>' + acts.map(function (a) { return '<li>' + esc(a.text) + '</li>'; }).join('') + '</ol>' : '') + '</div>';
+  }
+
+  function drawRail() {
+    var r = ev.r;
+    var failing = r.gates.filter(function (g) { return !g.pass; });
+    var msg = r.listed ? (r.score >= 75 ? 'Investor-ready: you get a badge and rank higher.' : 'Listed: verified investors can now see your profile.')
+      : r.score < 60 ? 'Raise your score above 60 to be listed.' : failing[0].id === 'G3' ? 'Answer the open required questions to be listed.' : failing[0].label + ' – needed to be listed.';
+    var steps = r.actions.map(function (a) {
+      return '<button class="step" data-goto="' + a.question + '" data-dim="' + a.dim + '"><span>' + esc(a.text) + '<br><span class="tiny muted">' + (a.kind === 'quick' ? 'Quick win' : 'Milestone') + '</span></span><span class="gain">' + (a.upTo ? 'up to ' : '') + '+' + a.gain.toFixed(1) + '</span></button>';
+    }).join('') || '<p class="muted small">Nothing left that moves the score.</p>';
+
+    var coreFlags = r.flags.map(function (f) {
+      return '<div class="coach ' + (f.severity === 'warning' ? 'warning' : '') + '"><div class="between"><span class="badge ' + (f.severity === 'warning' ? 'warn' : 'info') + '">' + (f.severity === 'warning' ? 'Warning' : 'Open question') + '</span><span class="mono tiny muted">' + f.id + '</span></div>' +
+        '<p class="small">' + esc(f.message) + '</p>' + (f.severity === 'warning' ? (f.confirmed ? '<span class="tiny muted">Confirmed</span>' : '<button class="btn sm" data-confirm="' + f.id + '">Confirm</button>') : '') + '</div>';
+    }).join('');
+    var addonFindings = ad.a.findings.filter(function (f) { return f.severity !== 'info'; }).map(coachCard).join('');
+
+    var dimRows = bank.dimensions.map(function (d) {
+      var x = r.dims[d.id]; if (!x.weight) return '';
+      return '<div class="dimrow"><div class="between"><span>' + esc(d.name) + '</span><span class="mono muted">' + x.points.toFixed(1) + ' / ' + x.weight + '</span></div><div class="bar"><i style="width:' + (x.score * 100) + '%"></i></div></div>';
+    }).join('');
+    var v = r.verification;
+
+    document.getElementById('rail').innerHTML =
+      '<div class="card"><div class="between"><h3>Readiness Score</h3>' + SB.levelBadge(r.level) + '</div>' +
+        '<div class="ring">' + SB.ring(r.score, 100, { mark: 60 }) + '<div class="val"><div><b class="num">' + r.score.toFixed(1) + '</b><span>of 100</span></div></div></div>' +
+        '<p style="font-weight:600;font-size:14px;margin-top:12px">' + esc(msg) + '</p><p class="muted tiny" style="margin-top:4px">The white tick marks the listing line at 60. Investor-ready from 75.</p></div>' +
+      '<div class="card"><h3>Next best steps</h3><p class="muted tiny" style="margin:4px 0 12px">Ranked by how much each step raises your score.</p><div class="stack" style="gap:8px">' + steps + '</div></div>' +
+      ((addonFindings || coreFlags) ? '<div class="card"><h3>Coaching</h3><p class="muted tiny" style="margin:4px 0 12px">What investors at ' + r.band + ' will check first, with what to do about it.</p><div class="stack" style="gap:10px">' + coreFlags + addonFindings + '</div></div>' : '') +
+      '<div class="card"><h3 style="margin-bottom:12px">Listing checks</h3><ul class="list">' + r.gates.map(function (g) {
+        var label = g.id === 'G3' && !g.pass ? g.missing.length + ' required answer' + (g.missing.length > 1 ? 's' : '') + ' open' : g.label;
+        return '<li><span class="ico ' + (g.pass ? 'ok' : 'warn') + '">' + (g.pass ? '✓' : '!') + '</span>' + esc(label) + '</li>';
+      }).join('') + '</ul></div>' +
+      '<div class="card"><h3 style="margin-bottom:14px">Score by dimension</h3><div class="stack" style="gap:12px">' + dimRows + '</div></div>' +
+      '<div class="card"><h3 style="margin-bottom:12px">Evidence confidence</h3><div class="tiles c3">' +
+        '<div class="tile"><div class="v" style="color:var(--ok)">' + v.verified + '</div><div class="k">Registry-verified</div></div>' +
+        '<div class="tile"><div class="v">' + v.linked + '</div><div class="k">Linked</div></div>' +
+        '<div class="tile"><div class="v" style="color:var(--warn)">' + (v.eligible - v.provided) + '</div><div class="k">Missing proof</div></div></div>' +
+        '<p class="muted tiny" style="margin-top:12px">DOIs, patent numbers and trial IDs are checked against public registries and count fully; links count half. Investors see this as a badge.</p></div>';
+  }
+
+  function draw(keepSection) {
+    ev = SB.evaluate(SB.startup());
+    ad = SB.addon(ev);
+    var secs = sections();
+    if (!cur) {
+      var h = location.hash.slice(1);
+      cur = secs.some(function (s) { return s.id === h; }) ? h : (secs.find(function (s) { return s.openReq; }) || secs[0]).id;
+    }
+    var vis = secs.reduce(function (n, s) { return n + (s.id === 'MOD' ? 0 : s.qs.length); }, 0);
+    var done = secs.reduce(function (n, s) { return n + (s.id === 'MOD' ? 0 : s.answered); }, 0);
+    document.getElementById('progress-label').textContent = done + ' of ' + vis + ' questions answered';
+    document.getElementById('progress-bar').style.width = (done / vis * 100) + '%';
+    document.getElementById('tags').innerHTML =
+      '<span class="badge solid">' + ev.r.band + ' · ' + esc(bank.bands[ev.r.band].name) + '</span>' +
+      ev.r.modules.map(function (m) { return '<span class="badge">' + esc(bank.modules[m].name) + ' module</span>'; }).join('') +
+      '<span class="badge">' + esc(st.round) + ' · raising €' + st.raise.min + '–' + st.raise.max + 'M</span>';
+    drawNav(secs);
+    if (!keepSection) drawSection(secs);
+    drawRail();
+  }
+
+  function setAnswer(id, val) {
+    if (val === null) delete st.answers[id]; else st.answers[id] = val;
+    SB.save();
+  }
+
+  /* ---------- events ---------- */
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-sec],[data-opt],[data-multi],[data-item],[data-goto],[data-confirm]');
+    if (!t || e.target.closest('input')) return;
+    if (t.dataset.sec) { e.preventDefault(); cur = t.dataset.sec; history.replaceState(null, '', '#' + cur); draw(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (t.dataset.goto) {
+      var q = SB.q(t.dataset.goto); cur = q.dim; draw();
+      var el = document.getElementById('q-' + q.id);
+      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('flash'); }
+      return;
+    }
+    if (t.dataset.confirm) { st.confirmed.push(t.dataset.confirm); SB.save(); draw(true); return; }
+    var id = t.dataset.q, a = st.answers[id];
+    if (t.dataset.opt !== undefined) {
+      var i = +t.dataset.opt;
+      setAnswer(id, a && a.option === i ? null : Object.assign({}, a && a.bullets ? { bullets: a.bullets } : {}, { option: i }, a && a.proof && a.option === i ? { proof: a.proof } : {}));
+    } else if (t.dataset.multi !== undefined) {
+      var sel = ((a && a.options) || []).slice(), k = +t.dataset.multi, p = sel.indexOf(k);
+      if (p >= 0) sel.splice(p, 1); else sel.push(k);
+      setAnswer(id, sel.length ? { options: sel } : null);
+    } else if (t.dataset.item) {
+      var items = ((a && a.items) || []).slice(), key = t.dataset.item, j = items.indexOf(key);
+      if (j >= 0) items.splice(j, 1); else items.push(key);
+      setAnswer(id, items.length ? { items: items, proofs: (a && a.proofs) || {} } : null);
+    }
+    draw();
+  });
+
+  document.addEventListener('change', function (e) {
+    var t = e.target, id = t.dataset.q, a;
+    if (t.dataset.num) setAnswer(t.dataset.num, t.value === '' ? null : { value: +t.value });
+    else if (t.dataset.proof) {
+      a = Object.assign({}, st.answers[t.dataset.proof]);
+      var q = SB.q(t.dataset.proof);
+      var pv = SB.verify(q.options[a.option].proof, t.value);
+      if (pv) a.proof = pv; else delete a.proof;
+      setAnswer(t.dataset.proof, a);
+    } else if (t.dataset.proofitem) {
+      a = Object.assign({}, st.answers[id]); a.proofs = Object.assign({}, a.proofs);
+      var it = SB.q(id).items.find(function (x) { return x.key === t.dataset.proofitem; });
+      var pi = SB.verify(it.proof, t.value);
+      if (pi) a.proofs[it.key] = pi; else delete a.proofs[it.key];
+      setAnswer(id, a);
+    } else if (t.dataset.bullet !== undefined) {
+      a = Object.assign({}, st.answers[id]); var bl = (a.bullets || []).slice();
+      bl[+t.dataset.bullet] = t.value.trim();
+      a.bullets = bl;
+      setAnswer(id, a);
+    } else if (t.dataset.fin) {
+      var v = t.dataset.fin === 'nextMilestone' ? t.value : (+t.value || 0) * (+t.dataset.scale || 1);
+      st.fin[t.dataset.fin] = v;
+      if (t.dataset.fin === 'sizeEur') { var m = v / 1e6; st.raise = { min: Math.max(0.5, Math.round(m * 0.85 * 2) / 2), max: m }; }
+      SB.save();
+    } else return;
+    draw();
+  });
+
+  draw();
+});
+</script>
+</body>
+</html>

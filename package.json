@@ -1,0 +1,9 @@
+{
+  "name": "biomatch-startup-cv",
+  "version": "2.0.0",
+  "private": true,
+  "description": "BioMatch Startup CV builder: question bank, Readiness Score and Matching Score reference engine",
+  "main": "src/scoring.js",
+  "scripts": { "test": "node --test tests/reference.test.js" },
+  "engines": { "node": ">=18" }
+}

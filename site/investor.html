@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deal flow · SeriesBio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+  .deal { display: grid; grid-template-columns: 56px minmax(0, 1fr) 150px; gap: 20px; align-items: start; text-decoration: none; transition: border-color .2s, transform .2s; }
+  .deal:hover { border-color: var(--line-2); transform: translateY(-1px); }
+  .deal .logo-tile { width: 56px; height: 56px; border-radius: 14px; background: var(--fg); color: #000; display: grid; place-items: center; font-size: 24px; font-weight: 700; }
+  .deal .score { text-align: right; }
+  .deal .score b { display: block; font-size: 40px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; }
+  .fund-select { max-width: 360px; }
+  .why { display: flex; flex-wrap: wrap; gap: 6px; }
+  @media (max-width: 860px) {
+    .deal { grid-template-columns: 48px minmax(0, 1fr); }
+    .deal .score { grid-column: 1 / -1; text-align: left; display: flex; gap: 12px; align-items: baseline; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap enter" id="page"></main>
+
+<script src="../src/scoring.js"></script>
+<script src="../src/examples.js"></script>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script>
+SB.init().then(function () {
+  var bank = SB.bank, esc = SB.esc;
+  var P = new URLSearchParams(location.search);
+  var vc = SB.D.vcs.find(function (v) { return v.id === P.get('vc'); }) || SB.D.vcs[0];
+  var showWeak = false;
+  SB.shell('investor', 'dealflow', { vc: vc.id, vcName: vc.name });
+
+  function draw() {
+    // Only listed startups are visible to investors; each pair is scored by scoring.js match()
+    var all = SB.allStartups();
+    var listed = all.filter(function (e) { return e.r.listed; });
+    var drafts = all.length - listed.length;
+    var rows = listed.map(function (e) { return { e: e, m: SB.S.match(e.full, vc) }; }).sort(function (a, b) { return b.m.score - a.m.score; });
+    var shown = rows.filter(function (x) { return x.m.score >= 50 || (showWeak && x.m.score > 0); });
+    var weak = rows.filter(function (x) { return x.m.score > 0 && x.m.score < 50; });
+    var filtered = rows.filter(function (x) { return x.m.score === 0; });
+    var avgR = listed.length ? listed.reduce(function (t, e) { return t + e.r.score; }, 0) / listed.length : 0;
+
+    document.getElementById('page').innerHTML =
+      '<div class="between page-head" style="flex-direction:row;flex-wrap:wrap;align-items:flex-end">' +
+        '<div class="stack" style="gap:12px;max-width:760px"><span class="eyebrow">Deal flow · pre-screened</span><h1 style="font-size:clamp(30px,3.6vw,44px)">Startups that fit your thesis – and are ready for it</h1>' +
+        '<p class="lead">Every startup here passed its listing checks. The match score weighs your fit and theirs equally; hard filters on both sides remove pairs that can never work.</p></div>' +
+        '<div class="field fund-select" style="margin:0"><label>Viewing as</label><select class="input" id="fund">' + SB.D.vcs.map(function (v) { return '<option value="' + v.id + '"' + (v.id === vc.id ? ' selected' : '') + '>' + esc(v.name) + '</option>'; }).join('') + '</select></div>' +
+      '</div>' +
+
+      '<div class="grid-main">' +
+        '<div class="stack">' +
+          '<div class="tiles c4">' +
+            '<div class="tile"><div class="k">Listed startups screened</div><div class="v">' + listed.length + '</div></div>' +
+            '<div class="tile"><div class="k">Matches shown</div><div class="v">' + rows.filter(function (x) { return x.m.score >= 50; }).length + '</div></div>' +
+            '<div class="tile"><div class="k">Filtered by must-haves</div><div class="v">' + filtered.length + '</div></div>' +
+            '<div class="tile"><div class="k">Avg. readiness</div><div class="v">' + avgR.toFixed(1) + '</div></div>' +
+          '</div>' +
+          (shown.length ? shown.map(function (x) {
+            var s = x.e.s, r = x.e.r, m = x.m;
+            return '<a class="card deal" href="profile.html?as=vc&vc=' + vc.id + '&s=' + s.id + '">' +
+              '<div class="logo-tile">' + esc(s.initials || s.name[0]) + '</div>' +
+              '<div class="stack" style="gap:8px"><div class="row" style="gap:10px"><h2 style="font-size:20px">' + esc(s.name) + '</h2>' + SB.levelBadge(r.level) + '</div>' +
+                '<p style="color:var(--fg-2)">' + esc(s.pitch) + '</p>' +
+                '<div class="row" style="gap:6px"><span class="badge solid">' + r.band + ' · ' + esc(bank.bands[r.band].name) + '</span><span class="badge">' + esc(s.areas[0]) + '</span><span class="badge">' + esc(s.modalities[0]) + '</span><span class="badge">' + esc(s.round) + ' · €' + s.raise.min + '–' + s.raise.max + 'M</span><span class="badge">' + esc(s.city) + '</span></div>' +
+                '<div class="small" style="margin-top:4px"><span class="muted">Why it fits: </span>' + esc(m.strengths.join(' · ') || '–') + (m.gap ? '<span class="muted"> · Gap: </span>' + esc(m.gap) : '') + (m.conflict ? ' <span class="badge warn">Portfolio conflict −10</span>' : '') + '</div>' +
+                '<div class="tiny muted">Readiness ' + r.score.toFixed(1) + ' · evidence confidence ' + SB.pct(r.verification.confidence) + '% · your fit ' + m.vcFit + ' · their fit ' + m.startupFit + '</div></div>' +
+              '<div class="score"><b>' + m.score + '</b><span class="small" style="color:' + (m.score >= 75 ? 'var(--ok)' : 'var(--fg-2)') + '">' + esc(m.label) + '</span></div></a>';
+          }).join('') : '<div class="card muted">No listed startup matches this fund right now.</div>') +
+          (weak.length ? '<button class="btn sm" id="weak" style="align-self:flex-start">' + (showWeak ? 'Hide' : 'Show') + ' ' + weak.length + ' weak match' + (weak.length > 1 ? 'es' : '') + '</button>' : '') +
+          (filtered.length ? '<div class="card"><h3 style="margin-bottom:10px">Filtered out</h3><ul class="list">' + filtered.map(function (x) {
+            return '<li><span class="ico todo"></span><div><b>' + esc(x.e.s.name) + '</b><div class="muted small">' + esc(x.m.hardFilterFailures.join(' · ')) + '</div></div></li>';
+          }).join('') + '</ul></div>' : '') +
+          (drafts ? '<p class="muted tiny">' + drafts + ' startup' + (drafts > 1 ? 's are' : ' is') + ' still in Draft and not visible to investors.</p>' : '') +
+        '</div>' +
+
+        '<aside class="stack sticky">' +
+          '<div class="card"><span class="eyebrow">Your fund profile</span><h2 style="margin:10px 0 4px">' + esc(vc.name) + '</h2><p class="muted small">' + esc(vc.type) + '</p>' +
+            '<p class="small" style="color:var(--fg-2);margin:14px 0">' + esc(vc.thesis) + '</p>' +
+            '<div class="facts" style="grid-template-columns:1fr 1fr"><div><div class="k">Ticket</div><div class="v">€' + vc.ticket.min + '–' + vc.ticket.max + 'M</div></div><div><div class="k">Role</div><div class="v">' + esc(vc.roles.join(', ')) + '</div></div>' +
+              '<div><div class="k">Rounds</div><div class="v">' + esc(vc.rounds.join(', ')) + '</div></div><div><div class="k">Stages</div><div class="v">' + esc(vc.bands.join(', ')) + '</div></div>' +
+              '<div><div class="k">Geography</div><div class="v">' + esc((vc.geography.regions || []).join(', ')) + (vc.geography.global ? ' · global' : '') + '</div></div><div><div class="k">Term sheet</div><div class="v">~' + vc.weeksToTermSheet + ' weeks</div></div></div>' +
+            '<div class="group-label" style="font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px">Areas & modalities</div><div class="why">' + vc.areas.concat(vc.modalities).map(function (a) { return '<span class="badge">' + esc(a) + '</span>'; }).join('') + '</div>' +
+            '<div style="font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px">Value-add</div><div class="why">' + vc.valueAdd.map(function (a) { return '<span class="badge">' + esc(a) + '</span>'; }).join('') + '</div>' +
+            '<p class="muted tiny" style="margin-top:16px">Investment period to ' + vc.investmentPeriodEnd + ' · reserves ' + Math.round(vc.reserveRatio * 100) + '% · minimum readiness ' + vc.minReadiness + '</p></div>' +
+          '<div class="card"><h3 style="margin-bottom:10px">How matching works</h3><ol class="bullets small"><li>Hard filters on both sides (round, ticket, lead, must-haves, readiness).</li><li>Your fit: area, modality, stage, round, geography, thesis similarity, readiness.</li><li>Their fit: ticket and role, value-add for their gaps, investor type, fund capacity, speed.</li><li>Score = √(your fit × their fit) − 10 for a portfolio conflict.</li></ol>' +
+          '<p class="muted tiny" style="margin-top:12px">We never predict success. You stay selective – we save the pre-screening.</p></div>' +
+        '</aside>' +
+      '</div>';
+
+    document.getElementById('fund').addEventListener('change', function (e) { location.search = '?vc=' + e.target.value; });
+    var w = document.getElementById('weak');
+    if (w) w.addEventListener('click', function () { showWeak = !showWeak; draw(); });
+  }
+  draw();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Startup profile · SeriesBio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+  .preview-bar { background: var(--card-2); border-bottom: 1px solid var(--line); padding: 12px 32px; font-size: 14px; color: var(--fg-2); }
+  .preview-bar b { color: var(--fg); margin-right: 10px; }
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: start; margin-bottom: 24px; }
+  .logo-tile { width: 72px; height: 72px; border-radius: 18px; background: var(--fg); color: #000; display: grid; place-items: center; font-size: 34px; font-weight: 700; flex: none; box-shadow: 0 10px 40px rgba(255,255,255,0.12); }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--muted); }
+  .statbox { display: grid; grid-template-columns: repeat(2, minmax(190px, 1fr)); border: 1px solid var(--line); border-radius: 16px; background: var(--card-2); }
+  .statbox > div { padding: 18px 20px; }
+  .statbox > div + div { border-left: 1px solid var(--line); }
+  .statbox .big { font-size: 30px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin: 6px 0; }
+  .mini-ring { width: 34px; height: 34px; display: inline-block; vertical-align: middle; margin-right: 8px; }
+  .metric { background: var(--card-2); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; min-height: 128px; }
+  .metric .k { font-size: 12px; color: var(--muted); }
+  .metric .v { font-size: 16px; font-weight: 600; line-height: 1.3; flex: 1; }
+  .group-label { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; }
+  .person { border: 1px solid var(--line); border-radius: 16px; padding: 18px; background: var(--card-2); display: flex; flex-direction: column; gap: 12px; }
+  .initials { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); display: grid; place-items: center; font-weight: 600; font-size: 14px; flex: none; }
+  .li-row { padding: 9px 12px; border-radius: 10px; background: var(--card-3); font-size: 13px; }
+  .dimtile { background: var(--card-2); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .dimtile .ringwrap { position: relative; width: 84px; height: 84px; margin: 4px auto; }
+  .dimtile .ringwrap b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 19px; }
+  .dimtile svg, .mini-ring svg { transform: rotate(-90deg); }
+  .circles { position: relative; height: 230px; }
+  .circles span { position: absolute; left: 50%; bottom: 0; border-radius: 50%; transform: translateX(-50%); border: 1px solid var(--line-2); }
+  .round-banner { border-radius: 16px; padding: 22px; background: radial-gradient(ellipse 80% 120% at 0% 0%, rgba(255,255,255,0.14), transparent 60%), var(--card-3); border: 1px solid var(--line-2); }
+  .syn-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0 14px; }
+  .stackbar { display: flex; height: 38px; border-radius: 10px; overflow: hidden; gap: 2px; margin: 14px 0; }
+  .stackbar > div { display: flex; align-items: center; padding: 0 10px; font-size: 12px; font-weight: 600; color: #000; white-space: nowrap; overflow: hidden; }
+  .match-card { border: 1px solid var(--line); border-radius: 14px; padding: 16px; background: var(--card-2); display: flex; flex-direction: column; gap: 8px; }
+  .match-card.top { border-color: rgba(255,255,255,0.5); }
+  .score-big { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+  .grid-profile { grid-template-columns: minmax(0, 1fr) 360px; }
+  @media (max-width: 860px) {
+    .grid-profile { grid-template-columns: minmax(0, 1fr); }
+    .grid-profile .card .tiles.c4, .grid-profile .card .tiles.c2, .grid-profile .card .tiles.c3 { grid-template-columns: minmax(0, 1fr); }
+    .card { padding: 18px; }
+    .hero { grid-template-columns: 1fr; }
+    .statbox { grid-template-columns: 1fr 1fr; }
+    .preview-bar { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+<div id="preview-bar"></div>
+<main class="wrap enter" id="page"></main>
+
+<script src="../src/scoring.js"></script>
+<script src="../src/examples.js"></script>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script>
+SB.init().then(function () {
+  var S = SB.S, bank = SB.bank, st = SB.state, esc = SB.esc;
+  var P = new URLSearchParams(location.search);
+  var asVc = P.get('as') === 'vc';
+  var vc = SB.D.vcs.find(function (v) { return v.id === P.get('vc'); }) || SB.D.vcs[0];
+  var sid = P.get('s') || 'nuvaris';
+  var synIdx = 0, synAtTarget = false;
+
+  if (asVc) SB.shell('investor', 'profile', { vc: vc.id, vcName: vc.name }); else SB.shell('startup', 'profile');
+
+  function compute() {
+    var ev = sid === 'nuvaris' ? SB.evaluate(SB.startup()) : SB.others().find(function (e) { return e.s.id === sid; });
+    var ad = sid === 'nuvaris' ? SB.addon(ev) : null;
+    return { ev: ev, ad: ad, matches: SB.matchAll(ev.full) };
+  }
+
+  /* ---------- pieces ---------- */
+
+  function metricCard(id, A) {
+    var q = SB.q(id); if (!q) return '';
+    var label = SB.optLabel(id, A);
+    var ps = SB.proofStatus(id, A);
+    var badge = !label ? '<span class="badge warn">Open</span>'
+      : ps === 'verified' ? '<span class="badge ok">✓ Registry-verified</span>'
+      : ps === 'linked' ? '<span class="badge info">Linked source</span>' : '<span class="badge">Self-reported</span>';
+    var dim = bank.dimensions.find(function (d) { return d.id === q.dim; });
+    return '<div class="metric"><div class="between"><span class="k">' + esc(q.criterion) + '</span><span class="tiny muted">' + esc(dim ? dim.name.split(' ')[0] : '') + '</span></div>' +
+      '<div class="v">' + esc(label || 'Not answered yet') + '</div><div>' + badge + '</div></div>';
+  }
+
+  function aiReview(ev, ad, matches) {
+    var r = ev.r, s = ev.s;
+    var dims = bank.dimensions.map(function (d) { return Object.assign({ id: d.id }, r.dims[d.id]); }).filter(function (d) { return d.weight; });
+    var best = dims.slice().sort(function (a, b) { return b.score - a.score; });
+    var weakest = dims.slice().sort(function (a, b) { return (b.weight * (1 - b.score)) - (a.weight * (1 - a.score)); })[0];
+    var conf = r.verification.confidence;
+    var top = matches.filter(function (m) { return m.score >= 75; });
+    var summary = esc(s.name) + ' is a ' + esc(bank.bands[r.band].name.toLowerCase()) + '-stage ' + esc(s.modalities.join(' and ').toLowerCase()) + ' company in ' + esc(s.areas.join(', ').toLowerCase()) +
+      ', raising ' + esc(s.round) + '. The profile is strongest on ' + esc(best[0].name.toLowerCase()) + ' and ' + esc(best[1].name.toLowerCase()) +
+      ', and ' + Math.round(conf * 100) + '% of proof-eligible claims are backed by a public source. The score is held back mainly by ' + esc(weakest.name.toLowerCase()) +
+      ' (' + SB.pct(weakest.score) + '% at a weight of ' + weakest.weight + ').';
+    var stand = [];
+    var sc2 = (s.answers.SC02 && s.answers.SC02.items) || [], exp = (SB.q('SC02').expected[r.band] || []);
+    stand.push(sc2.filter(function (k) { return exp.indexOf(k) >= 0; }).length + ' of ' + exp.length + ' evidence items investors expect at ' + r.band + ' are in place');
+    if (top.length) stand.push('Strong thesis fit with ' + top.length + ' fund' + (top.length > 1 ? 's' : '') + ', led by ' + top[0].vc + ' (' + top[0].score + ')');
+    best.slice(0, 1).forEach(function (d) { stand.push(d.name + ' scores ' + SB.pct(d.score) + '% of its maximum'); });
+    var watch = [];
+    if (ad) ad.a.findings.filter(function (f) { return f.severity !== 'info'; }).forEach(function (f) { watch.push(f.title + (f.evidence && f.evidence.summary ? ': ' + f.evidence.summary.replace(/ Team score.*$/, '') : '')); });
+    r.flags.filter(function (f) { return f.severity !== 'warning'; }).forEach(function (f) { watch.push(f.message); });
+    exp.filter(function (k) { return sc2.indexOf(k) < 0; }).forEach(function (k) { watch.push('Next evidence milestone: ' + SB.q('SC02').items.find(function (i) { return i.key === k; }).label.toLowerCase()); });
+    return '<div class="card"><div class="card-head"><h3><span class="icon-tile">✦</span>AI review</h3></div>' +
+      '<p class="small" style="color:var(--fg-2)">' + summary + '</p>' +
+      '<div class="group-label" style="color:var(--ok)">✓ What stands out</div><ul class="bullets small">' + stand.slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+      (watch.length ? '<div class="group-label" style="color:var(--warn)">! Watch-outs</div><ul class="bullets small">' + watch.slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '') +
+      '<p class="muted tiny" style="margin-top:16px;border-top:1px solid var(--line);padding-top:12px">Generated from the Startup CV, its public sources and the scoring engine. Rule-based in this demo – a language model may rephrase but never changes numbers. Informational only, not investment advice.</p></div>';
+  }
+
+  function teamCard(ad) {
+    var members = SB.D.nuvarisAddon.team, tm = ad.a.team.members;
+    return '<div class="card"><div class="card-head"><div><h2><span class="icon-tile">◎</span>Founding team</h2><p class="muted small" style="margin:4px 0 0 40px">' + members.length + ' founders · team model ' + ad.a.team.score + '/100</p></div></div>' +
+      '<div class="tiles c2">' + members.map(function (m, i) {
+        var comp = tm[i] ? tm[i].competencies : {};
+        return '<div class="person"><div class="row" style="gap:12px;flex-wrap:nowrap"><span class="initials">' + m.name.replace('Dr. ', '').split(' ').map(function (w) { return w[0]; }).join('') + '</span>' +
+          '<div><b>' + esc(m.name) + '</b><div class="muted small">' + (m.founder ? 'Co-founder, ' : '') + m.role.toUpperCase() + (m.fulltime ? ' · full-time' : '') + '</div></div></div>' +
+          '<p class="small" style="color:var(--fg-2)">' + esc(m.bio) + '</p>' +
+          '<div class="row" style="gap:6px">' + m.badges.map(function (b) { return '<span class="badge">✓ ' + esc(b) + '</span>'; }).join('') + '</div>' +
+          '<div class="group-label" style="margin:4px 0 0">Previously</div>' + m.previously.map(function (p) { return '<div class="li-row">' + esc(p) + '</div>'; }).join('') +
+          '<div class="group-label" style="margin:4px 0 0">Education</div><div class="li-row">' + esc(m.education) + '</div>' +
+          '<div class="stack" style="gap:6px;margin-top:4px">' + Object.keys(comp).map(function (c) {
+            return '<div style="display:grid;grid-template-columns:96px 1fr 26px;gap:8px;align-items:center" class="tiny"><span class="muted" style="text-transform:capitalize">' + c + '</span><div class="bar"><i style="width:' + comp[c] + '%"></i></div><span class="mono">' + comp[c] + '</span></div>';
+          }).join('') + '</div></div>';
+      }).join('') + '</div>' +
+      '<div class="group-label">Advisors</div><div class="tiles c2">' + SB.D.nuvarisAddon.advisors.map(function (a) { return '<div class="tile small"><b>' + esc(a.name) + '</b><div class="muted">' + esc(a.role) + '</div></div>'; }).join('') + '</div></div>';
+  }
+
+  function evidenceCard(ev) {
+    var A = ev.s.answers, band = ev.r.band, q = SB.q('SC02');
+    var have = (A.SC02 && A.SC02.items) || [], exp = q.expected[band] || [];
+    var items = q.items.filter(function (i) { return have.indexOf(i.key) >= 0 || exp.indexOf(i.key) >= 0; });
+    var pos = A.SC07;
+    return '<div class="card"><div class="card-head"><h2><span class="icon-tile">⌬</span>Evidence so far</h2><span class="muted small">Expected at ' + band + ': ' + exp.length + ' items</span></div>' +
+      '<div class="tiles c3">' + items.map(function (i) {
+        var ok = have.indexOf(i.key) >= 0;
+        return '<div class="tile row small" style="flex-wrap:nowrap;' + (ok ? '' : 'background:var(--warn-bg);border-color:transparent') + '"><span class="ico ' + (ok ? 'ok' : 'todo') + '">' + (ok ? '✓' : '') + '</span><span>' + esc(i.label) + (ok ? '' : ' – next milestone') + '</span></div>';
+      }).join('') + '</div>' +
+      '<p class="muted small" style="margin-top:14px">' + esc(SB.optLabel('SC03', A) || '') + '. ' + (A.EV01 && A.EV01.proof && A.EV01.proof.verified ? 'Preprint verified via Crossref.' : '') + '</p>' +
+      (pos ? '<div class="group-label">' + esc(SB.optLabel('SC07', A)) + ' against today’s standard of care</div><ul class="bullets">' + (pos.bullets || []).filter(Boolean).map(function (b) { return '<li>' + esc(b) + '</li>'; }).join('') + '</ul>' : '') + '</div>';
+  }
+
+  function marketCard(ad) {
+    var m = ad.a.market, inp = SB.D.nuvarisAddon.market;
+    var max = m.tamEur, sz = function (v) { return Math.max(18, Math.sqrt(v / max) * 220); };
+    return '<div class="card"><div class="card-head"><h2><span class="icon-tile">◐</span>Market</h2><span class="badge">Model score ' + m.score + '/100</span></div>' +
+      '<p class="muted small">Circle areas are drawn to scale. Inputs are public ranges, sourced: ' + esc(inp.source) + '.</p>' +
+      '<div style="display:grid;grid-template-columns:240px 1fr;gap:28px;align-items:center;margin-top:18px" class="mk">' +
+        '<div class="circles">' +
+          '<span style="width:' + sz(m.tamEur) + 'px;height:' + sz(m.tamEur) + 'px;background:rgba(255,255,255,0.04)"></span>' +
+          '<span style="width:' + sz(m.samEur) + 'px;height:' + sz(m.samEur) + 'px;background:rgba(255,255,255,0.08)"></span>' +
+          '<span style="width:' + sz(m.credibleCase.peakRevenueEur) + 'px;height:' + sz(m.credibleCase.peakRevenueEur) + 'px;background:#fff;border-color:#fff"></span></div>' +
+        '<div class="stack" style="gap:14px">' +
+          '<div><b style="font-size:22px">' + SB.eurBig(m.tamEur) + '</b> <span class="muted">TAM</span><div class="muted small">' + inp.patients.toLocaleString('en') + ' patients a year × €' + Math.round(inp.annualPriceEur / 1000) + 'k annual price</div></div>' +
+          '<div><b style="font-size:22px">' + SB.eurBig(m.samEur) + '</b> <span class="muted">SAM</span><div class="muted small">' + inp.eligibleSharePct + '% eligible for the lead indication</div></div>' +
+          '<div><b style="font-size:22px">' + SB.eurM(m.credibleCase.peakRevenueEur) + '</b> <span class="muted">credible peak revenue</span><div class="muted small">' + m.credibleCase.sharePct + '% peak share' + ' · ' + m.probabilityOfSuccessPct + '% probability of success → risk-adjusted ' + SB.eurM(m.riskAdjustedPeakEur) + '</div></div>' +
+        '</div></div>' +
+      '<table class="t" style="margin-top:18px"><tr><th>Peak share</th>' + m.scenarios.map(function (x) { return '<th>' + x.sharePct + '%</th>'; }).join('') + '</tr><tr><td class="muted">Peak revenue</td>' + m.scenarios.map(function (x) { return '<td class="num">' + SB.eurM(x.peakRevenueEur) + '</td>'; }).join('') + '</tr></table></div>';
+  }
+
+  function syndicateCard(ev, ad) {
+    var list = synAtTarget && ad.synTarget ? ad.synTarget : ad.syn;
+    var f = st.fin, ms = SB.cfg.milestones.find(function (m) { return m.id === f.nextMilestone; });
+    var banner = '<div class="round-banner"><div class="row" style="gap:28px;align-items:flex-start">' +
+      '<div><div class="eyebrow">Current round</div><div style="font-size:26px;font-weight:600;margin-top:6px">' + esc(ev.s.round) + ' · ' + SB.eurM(f.sizeEur) + '</div></div>' +
+      '<div><div class="eyebrow">Milestone</div><div style="font-size:16px;font-weight:500;margin-top:8px">' + esc(ms ? ms.label : '') + ' in ' + f.monthsToMilestone + ' mo</div></div>' +
+      '<div><div class="eyebrow">Lead</div><div style="font-size:16px;font-weight:500;margin-top:8px">' + (f.leadSecured ? 'Secured' : 'Wanted') + '</div></div></div>' +
+      (ad.f11 ? '<div class="finding warn small" style="margin-top:16px">' + esc(ad.f11.evidence.summary) + '</div>' : '') + '</div>';
+    if (!list || !list.length) return '<div class="card"><div class="card-head"><h2><span class="icon-tile">⧉</span>Syndicate Builder</h2></div>' + banner + '<p class="muted small" style="margin-top:16px">No complete syndicate yet – not enough leads match at this round size.</p></div>';
+    synIdx = Math.min(synIdx, list.length - 1);
+    var s = list[synIdx];
+    var shades = ['#fff', 'rgba(255,255,255,0.72)', 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0.36)', 'rgba(255,255,255,0.26)'];
+    var toggle = ad.synTarget ? '<div class="row" style="gap:6px"><button class="chip ' + (!synAtTarget ? 'on' : '') + '" data-at="0">At your ' + SB.eurM(f.sizeEur) + '</button><button class="chip ' + (synAtTarget ? 'on' : '') + '" data-at="1">At the suggested ' + SB.eurM(ad.f11.evidence.targetRoundEur) + '</button></div>' : '';
+    return '<div class="card"><div class="card-head"><div><h2><span class="icon-tile">⧉</span>Syndicate Builder</h2><p class="muted small" style="margin:4px 0 0 40px">A lead plus co-investors whose tickets add up to the round, with reserves for the next one.</p></div></div>' +
+      banner + (toggle ? '<div style="margin-top:16px">' + toggle + '</div>' : '') +
+      '<div class="syn-tabs">' + list.map(function (x, i) {
+        return '<button class="chip ' + (i === synIdx ? 'on' : '') + '" data-syn="' + i + '">Syndicate ' + (i + 1) + ' <span class="pts">' + x.score + '</span></button>';
+      }).join('') + '</div>' +
+      '<div class="stackbar">' + s.members.map(function (m, i) {
+        return '<div style="flex:' + m.ticketEur + ';background:' + shades[i] + '" title="' + esc(m.name) + '">' + SB.eurM(m.ticketEur) + '</div>';
+      }).join('') + (s.shortfallEur > 0 ? '<div style="flex:' + s.shortfallEur + ';background:var(--bad-bg);color:var(--bad)">gap ' + SB.eurM(s.shortfallEur) + '</div>' : '') + '</div>' +
+      '<table class="t"><tr><th>Fund</th><th>Role</th><th>Ticket</th><th>Match</th><th>Covers</th></tr>' + s.members.map(function (m, i) {
+        return '<tr><td><span class="dot" style="color:' + shades[i] + ';margin-right:8px"></span>' + esc(m.name) + '</td><td>' + (m.role === 'lead' ? '<span class="badge solid">Lead</span>' : '<span class="badge">Co</span>') + '</td><td class="num">' + SB.eurM(m.ticketEur) + '</td><td class="num">' + m.match + '</td><td class="small muted">' + (m.covers.map(function (c) { return c.replace(/_/g, ' '); }).join(', ') || '–') + '</td></tr>';
+      }).join('') + '</table>' +
+      '<div class="tiles c3" style="margin-top:16px"><div class="tile"><div class="k">Syndicate score</div><div class="v">' + s.score + '</div></div>' +
+        '<div class="tile"><div class="k">Gaps covered</div><div class="v">' + s.gapCoverage + '%</div></div>' +
+        '<div class="tile"><div class="k">Reserves vs next round</div><div class="v" style="font-size:20px">' + SB.eurM(s.followOnReserveEur) + ' <span class="muted" style="font-size:13px">/ ~' + SB.eurM(s.nextRoundEstimateEur) + '</span></div></div></div>' +
+      '<div class="group-label">Why this combination works</div><ul class="bullets small">' + s.why.map(function (w) { return '<li>' + esc(w.replace(/_/g, ' ')) + '</li>'; }).join('') + '</ul>' +
+      (asVc ? '' : '<button class="btn primary" style="margin-top:18px" data-introsyn="' + synIdx + '">Request intros to this syndicate</button>') + '</div>';
+  }
+
+  function matchesCard(matches) {
+    if (asVc) {
+      var m = matches.find(function (x) { return x.vcId === vc.id; });
+      var filtered = m.score === 0;
+      return '<div class="card"><div class="between"><h3>Fit for ' + esc(vc.name) + '</h3>' + (filtered ? '<span class="badge warn">Filtered</span>' : '<span class="badge ' + (m.score >= 75 ? 'ok' : '') + '">' + esc(m.label) + '</span>') + '</div>' +
+        (filtered ? '<ul class="bullets small" style="margin-top:12px">' + m.hardFilterFailures.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ul>'
+        : '<div class="row" style="margin:12px 0;gap:16px"><span class="score-big">' + m.score + '</span><span class="muted small">Your fit ' + m.vcFit + ' · their fit ' + m.startupFit + (m.conflict ? ' · portfolio conflict −10' : '') + '</span></div>' +
+          '<div class="group-label" style="margin-top:4px">Strengths</div><ul class="bullets small">' + m.strengths.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
+          (m.gap ? '<div class="group-label">Gap</div><p class="small">' + esc(m.gap) + '</p>' : '') +
+          '<button class="btn primary block" style="margin-top:16px" data-vcintro>Request an intro</button><p class="muted tiny" style="margin-top:10px">Text only, max 500 characters. Contacts are released when the startup accepts. CDA and data room happen off-platform.</p>') + '</div>';
+    }
+    var shown = matches.filter(function (x) { return x.score >= 50; });
+    var weak = matches.filter(function (x) { return x.score > 0 && x.score < 50; }).length;
+    var out = matches.filter(function (x) { return x.score === 0; }).length;
+    return '<div class="card"><h3>Your best-matching investors</h3><p class="muted tiny" style="margin:4px 0 14px">Demo funds. The score weighs both sides’ fit equally.</p><div class="stack" style="gap:10px">' +
+      shown.slice(0, 4).map(function (m, i) {
+        var sent = st.intros.indexOf(m.vcId) >= 0;
+        return '<div class="match-card ' + (i === 0 ? 'top' : '') + '"><div class="between"><b>' + esc(m.vc) + '</b><span class="score-big" style="font-size:24px">' + m.score + '</span></div>' +
+          '<span class="tiny" style="color:' + (m.score >= 75 ? 'var(--ok)' : 'var(--fg-2)') + '">' + esc(m.label) + (m.conflict ? ' · portfolio overlap −10' : '') + '</span>' +
+          '<p class="small muted">' + esc(m.strengths.join(', ')) + (m.gap ? '. Gap: ' + esc(m.gap.toLowerCase()) + '.' : '.') + '</p>' +
+          '<button class="btn sm ' + (i === 0 && !sent ? 'primary' : '') + '" data-intro="' + m.vcId + '"' + (sent ? ' disabled' : '') + '>' + (sent ? 'Intro requested' : 'Request an intro') + '</button></div>';
+      }).join('') + '</div><p class="muted tiny" style="margin-top:14px">' + (weak ? weak + ' weak match' + (weak > 1 ? 'es' : '') + ' hidden by default; ' : '') + (out ? out + ' fund' + (out > 1 ? 's' : '') + ' filtered out by their own must-haves. ' : '') + 'You can have 10 open intro requests – text only, no attachments.</p></div>';
+  }
+
+  /* ---------- page ---------- */
+
+  function draw() {
+    var c = compute(), ev = c.ev, ad = c.ad, r = ev.r, s = ev.s, A = s.answers;
+    document.title = s.name + ' · SeriesBio';
+    document.getElementById('preview-bar').innerHTML = asVc ? '' : '<div class="preview-bar"><b>Preview</b>This is your profile as verified investors see it. Contact details stay hidden until you both accept an intro.' + (r.listed ? '' : ' <span style="color:var(--warn)">· Not listed yet – investors cannot see it until you pass the listing checks.</span>') + '</div>';
+    var conf = r.verification.confidence, confLabel = conf >= 0.75 ? 'High' : conf >= 0.5 ? 'Medium' : 'Low';
+    var nextInfl = A.PD05 ? 'In ' + A.PD05.value + ' months' : '–';
+
+    var radarItems = bank.dimensions.filter(function (d) { return r.dims[d.id].weight; }).map(function (d) {
+      return { label: d.name.replace(' and ', ' & ').replace('Regulatory & clinical', 'Regulatory').replace('External validation', 'Ext. validation').replace('Science & evidence', 'Science').replace('Product & plan', 'Product').replace('IP & exclusivity', 'IP'), v: r.dims[d.id].score };
+    });
+
+    var groups = [
+      ['Science & evidence', ['SC01', 'SC03', 'SC04', 'SC05']],
+      ['Product & IP', ['PD02', 'PD05', 'IP01', 'IP02']],
+      ['Market, CMC & validation', ['MK01', 'MK04', 'CM01', 'EV01']]
+    ];
+
+    document.getElementById('page').innerHTML =
+      // Hero
+      '<div class="card hero"><div class="row" style="gap:20px;align-items:flex-start;flex-wrap:nowrap">' +
+        '<div class="logo-tile">' + esc(s.initials || s.name[0]) + '</div>' +
+        '<div class="stack" style="gap:10px"><h1 style="font-size:36px">' + esc(s.name) + '</h1><p style="color:var(--fg-2);font-size:17px">' + esc(s.pitch) + '</p>' +
+          '<div class="meta-row"><span>⌖ ' + esc(s.city + ', ' + s.country) + '</span><span>Founded ' + s.founded + '</span><span>' + s.employees + ' employees</span><span style="color:var(--fg)">' + esc(s.website) + '</span></div>' +
+          '<div class="row" style="gap:6px"><span class="badge solid">' + r.band + ' · ' + esc(bank.bands[r.band].name) + '</span>' + (s.tags || []).map(function (t) { return '<span class="badge">' + esc(t) + '</span>'; }).join('') + '<span class="badge">' + esc(s.round) + '</span><span class="badge">' + esc(s.origin) + '</span></div>' +
+          '<div class="row" style="margin-top:6px">' + (asVc ? '<button class="btn primary sm" data-vcintro>Request an intro</button><button class="btn sm" data-watch>☆ Add to watchlist</button>' : '<a class="btn sm" href="cv.html">← Back to editing</a>') + '<button class="btn sm" data-share>Share</button><button class="btn sm" data-onepager>⤓ One-pager</button></div></div></div>' +
+        '<div class="statbox"><div><div class="muted small">Raising</div><div class="big">' + esc(s.raiseLabel.split(' · ')[0]) + '</div><div class="muted small">' + esc(s.raiseLabel.split(' · ')[1] || '') + (s.runwayAfterClose ? ' · runway ' + esc(s.runwayAfterClose) : '') + '</div></div>' +
+          '<div><div class="between"><span class="muted small">Readiness</span>' + SB.levelBadge(r.level) + '</div><div class="big"><span class="mini-ring">' + SB.ring(r.score, 100, { w: 14 }) + '</span>' + r.score.toFixed(1) + '</div><div class="muted small">' + r.band + ' template · confidence ' + confLabel.toLowerCase() + '</div></div></div>' +
+      '</div>' +
+
+      '<div class="grid-main grid-profile">' +
+        '<div class="stack" style="gap:24px">' +
+          // Overview + key metrics
+          '<div class="card"><div class="card-head"><h2><span class="icon-tile">▤</span>Overview</h2></div>' +
+            '<p style="color:var(--fg-2);max-width:720px">' + esc(s.overview || s.thesisText) + '</p>' +
+            '<div class="facts" style="margin-top:20px"><div><div class="k">Stage</div><div class="v">' + r.band + ' · ' + esc(bank.bands[r.band].name) + '</div></div><div><div class="k">Lead indication</div><div class="v">' + esc(s.indicationCategory) + '</div></div>' +
+              '<div><div class="k">Raising</div><div class="v">' + esc(s.raiseLabel) + '</div></div><div><div class="k">Next value inflection</div><div class="v">' + nextInfl + '</div></div>' +
+              '<div><div class="k">IP</div><div class="v">' + esc(s.ipLabel || SB.optLabel('IP01', A) || '–') + '</div></div><div><div class="k">Team</div><div class="v">' + esc(s.teamLabel || SB.optLabel('TM01', A) + ' full-time') + '</div></div></div>' +
+            '<div class="between" style="margin-top:28px"><h3>Key facts</h3><span class="muted small">ⓘ Every field shows how it is verified</span></div>' +
+            groups.map(function (g) { return '<div class="group-label">' + g[0] + '</div><div class="tiles c4">' + g[1].map(function (id) { return metricCard(id, A); }).join('') + '</div>'; }).join('') +
+          '</div>' +
+          (ad ? teamCard(ad) : '') +
+          evidenceCard(ev) +
+          (ad ? marketCard(ad) : '') +
+          (ad ? syndicateCard(ev, ad) : '') +
+          '<div class="card"><h2 style="margin-bottom:14px">Documents</h2><div class="row"><button class="btn" data-deck>Non-confidential deck · ' + (s.deckSlides || 12) + ' slides · watermarked viewer</button><button class="btn" data-onepager>One-page summary · generated from the CV</button></div>' +
+            '<p class="muted tiny" style="margin-top:12px">NDAs, data rooms and deep due diligence happen outside SeriesBio, after both sides accept an intro.</p></div>' +
+        '</div>' +
+
+        '<aside class="stack" style="gap:16px">' +
+          '<div class="card"><div class="card-head"><h3><span class="icon-tile">✧</span>Readiness score</h3><span class="muted tiny">Not a quality score</span></div>' +
+            '<div style="position:relative">' + SB.radar(radarItems, 300) + '<div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none"><div style="text-align:center"><b style="font-size:34px;letter-spacing:-0.03em">' + r.score.toFixed(1) + '</b><div class="muted tiny">/ 100</div></div></div></div>' +
+            '<div class="between tiny" style="border-top:1px solid var(--line);padding-top:12px;margin-top:8px"><span class="muted">Confidence: <b style="color:var(--fg)">' + confLabel + '</b> · ' + r.verification.provided + ' sourced</span><span class="muted">Updated today</span></div></div>' +
+          '<div class="tiles c2">' + bank.dimensions.filter(function (d) { return r.dims[d.id].weight; }).map(function (d) {
+            var x = r.dims[d.id];
+            return '<div class="dimtile"><b class="small">' + esc(d.name) + '</b><div class="ringwrap">' + SB.ring(x.score, 1, { w: 9 }) + '<b>' + SB.pct(x.score) + '<span class="muted" style="font-size:11px">%</span></b></div><div class="between tiny muted"><span>' + SB.quality(x.score) + '</span><span>Weight ' + x.weight + '%</span></div></div>';
+          }).join('') + '</div>' +
+          aiReview(ev, ad, c.matches) +
+          matchesCard(c.matches) +
+        '</aside>' +
+      '</div>' +
+      '<p class="muted tiny" style="text-align:center;margin-top:40px">Fictional demo data. All companies and funds are invented. Figures as of ' + new Date().toISOString().slice(0, 10) + '.</p>';
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('button'); if (!t) return;
+    if (t.dataset.syn !== undefined) { synIdx = +t.dataset.syn; draw(); return; }
+    if (t.dataset.at !== undefined) { synAtTarget = t.dataset.at === '1'; synIdx = 0; draw(); return; }
+    if (t.dataset.intro) { if (st.intros.length >= 10) return SB.toast('You have 10 open intro requests'); st.intros.push(t.dataset.intro); SB.save(); SB.toast('Intro request sent – text only'); draw(); return; }
+    if (t.dataset.introsyn !== undefined) {
+      var ad = compute().ad, list = synAtTarget && ad.synTarget ? ad.synTarget : ad.syn;
+      list[+t.dataset.introsyn].members.forEach(function (m) { if (st.intros.indexOf(m.vcId) < 0 && st.intros.length < 10) st.intros.push(m.vcId); });
+      SB.save(); SB.toast('Intro requests sent to ' + list[+t.dataset.introsyn].members.length + ' funds'); draw(); return;
+    }
+    if (t.hasAttribute('data-vcintro')) return SB.toast('Intro request sent to the founders');
+    if (t.hasAttribute('data-watch')) return SB.toast('Added to your watchlist');
+    if (t.hasAttribute('data-share')) { try { navigator.clipboard.writeText(location.href); } catch (err) {} return SB.toast('Link copied – verified investors only'); }
+    if (t.hasAttribute('data-onepager')) return window.print();
+    if (t.hasAttribute('data-deck')) return SB.toast('Watermarked viewer opens for verified investors');
+  });
+
+  draw();
+});
+</script>
+<style>@media (max-width: 860px) { .mk { grid-template-columns: 1fr !important; } }</style>
+</body>
+</html>

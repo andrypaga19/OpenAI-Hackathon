@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stage and template · SeriesBio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<main class="wrap enter">
+  <div class="page-head">
+    <span class="eyebrow">Step 1 of 3</span>
+    <h1>Tell us where you are.<br>We pick the questions investors ask at your stage.</h1>
+    <p class="lead">Your development stage selects the template, so a discovery-stage spin-out is never scored on data it cannot have yet. Your modality adds a short module of its own.</p>
+  </div>
+
+  <div class="grid-main">
+    <div class="stack" style="gap:36px">
+      <section>
+        <h2 style="margin-bottom:14px">How far is your lead program?</h2>
+        <div class="opt-grid" id="trl"></div>
+      </section>
+      <section>
+        <h2>Which modalities do you work with?</h2>
+        <p class="muted small" style="margin:4px 0 14px">Each modality with a module adds three or four questions. Vaccines, radiopharmaceuticals and microbiome use the core questions only.</p>
+        <div class="row" id="mod"></div>
+      </section>
+      <section style="display:grid;grid-template-columns:1fr 1fr;gap:28px" class="two">
+        <div>
+          <h2 style="margin-bottom:14px">What kind of company are you?</h2>
+          <div class="row" id="ctype"></div>
+        </div>
+        <div>
+          <h2 style="margin-bottom:14px">Which round are you raising?</h2>
+          <div class="row" id="round"></div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="card sticky" id="tpl"></aside>
+  </div>
+</main>
+
+<script src="../src/scoring.js"></script>
+<script src="../src/examples.js"></script>
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script>
+  var EXPECT = {
+    D1: ['Full-time founders and a clearly described unmet need', 'A first proof of concept in a defined model', 'A funded kill/go experiment for the next 12 months'],
+    D2: ['Key result reproduced outside your own lab', 'A Target Product Profile and one lead indication', 'IP owned by the company or exclusively licensed'],
+    D3: ['Freedom-to-operate analysis and a PCT or granted patent', 'A pre-IND or scientific-advice meeting', 'A CDMO and a plan for GMP material'],
+    D4: ['Registered trials with human safety data', 'Expedited designations where eligible', 'A pricing hypothesis and a COGS estimate']
+  };
+  var COMPANY_TYPES = ['Asset-centric', 'Platform with lead asset', 'Platform only'];
+
+  SB.init().then(function () {
+    SB.shell('startup', 'onboarding');
+    var S = SB.S, bank = SB.bank, st = SB.state, esc = SB.esc;
+
+    function draw() {
+      // TRL cards
+      document.getElementById('trl').innerHTML = bank.trlOptions.map(function (o, i) {
+        var parts = o.label.split(': ');
+        var b = bank.bands[o.band];
+        var on = st.trl === o.label;
+        return '<button class="opt ' + (on ? 'on' : '') + '" data-trl="' + i + '"><div class="between"><b>' + esc(parts[0]) + '</b><span class="badge ' + (on ? 'solid' : '') + '">' + o.band + ' · ' + esc(b.name) + '</span></div>' +
+          '<span class="muted small">' + esc(parts[1].charAt(0).toUpperCase() + parts[1].slice(1)) + '</span></button>';
+      }).join('');
+
+      document.getElementById('mod').innerHTML = bank.modalityOptions.map(function (o) {
+        var on = st.modalities.indexOf(o.label) >= 0;
+        return '<button class="chip ' + (on ? 'on' : '') + '" data-mod="' + esc(o.label) + '">' + (on ? '✓ ' : '') + esc(o.label) + '</button>';
+      }).join('');
+
+      document.getElementById('ctype').innerHTML = COMPANY_TYPES.map(function (t) {
+        return '<button class="chip ' + (st.companyType === t ? 'on' : '') + '" data-ct="' + t + '">' + t + '</button>';
+      }).join('');
+
+      document.getElementById('round').innerHTML = S.ROUNDS.map(function (r) {
+        return '<button class="chip ' + (st.round === r ? 'on' : '') + '" data-round="' + r + '">' + r + '</button>';
+      }).join('');
+
+      // Template summary – straight from the question bank
+      var probe = { trl: st.trl, modalities: st.modalities, companyType: st.companyType };
+      var band = S.bandOf(bank, probe), mods = S.activeModules(bank, probe);
+      var vis = S.visibleQuestions(bank, band, mods).filter(function (q) { return q.scored !== false; });
+      var req = vis.filter(function (q) { return q.req[S.BANDS.indexOf(band)] === 'R'; }).length;
+      var minutes = Math.max(15, Math.round(vis.length / 5) * 5);
+      var w = S.weightsFor(bank, band, mods);
+      var top = Object.keys(w).sort(function (a, b) { return w[b] - w[a]; }).slice(0, 3).map(function (k) {
+        var d = bank.dimensions.find(function (x) { return x.id === k; });
+        return d.name.split(' ')[0] + ' ' + w[k];
+      }).join(' · ');
+      var bi = S.BANDS.indexOf(band);
+      var f1 = (st.round === 'Series A' && band === 'D1') || ((st.round === 'Series B' || st.round === 'Series C+') && bi <= 1);
+      var trlOpt = bank.trlOptions.find(function (o) { return o.label === st.trl; });
+
+      document.getElementById('tpl').innerHTML =
+        '<span class="eyebrow">Your template</span>' +
+        '<h2 style="font-size:28px;margin:10px 0 6px">' + band + ' · ' + esc(bank.bands[band].name) + '</h2>' +
+        '<p class="muted small">' + esc(trlOpt ? trlOpt.label : '') + '</p>' +
+        '<div class="tiles c2" style="margin:18px 0">' +
+          '<div class="tile"><div class="v">' + vis.length + '</div><div class="k">Scored questions</div></div>' +
+          '<div class="tile"><div class="v">' + req + '</div><div class="k">Required</div></div>' +
+          '<div class="tile"><div class="v">' + (vis.length - req) + '</div><div class="k">Optional bonus</div></div>' +
+          '<div class="tile"><div class="v">' + minutes + '<span class="muted" style="font-size:14px"> min</span></div><div class="k">About</div></div>' +
+        '</div>' +
+        '<h3 class="small" style="margin-bottom:8px">Modules</h3><div class="row" style="margin-bottom:18px">' +
+          (mods.size ? Array.from(mods).map(function (m) { return '<span class="badge">' + esc(bank.modules[m].name) + '</span>'; }).join('') : '<span class="muted small">Core questions only</span>') + '</div>' +
+        '<h3 class="small" style="margin-bottom:4px">Weighs most at this stage</h3><p class="muted small" style="margin-bottom:18px">' + top + ' of 100 points</p>' +
+        '<h3 class="small" style="margin-bottom:8px">What investors expect at this stage</h3><ul class="bullets small" style="margin-bottom:18px">' + EXPECT[band].map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul>' +
+        (f1 ? '<div class="finding warn small" style="margin-bottom:16px"><b>' + esc(st.round) + ' at ' + band + '</b><br>' + esc(bank.checks[0].message) + '</div>' : '') +
+        '<p class="muted tiny" style="border-top:1px solid var(--line);padding-top:14px;margin-bottom:16px">You are listed at 60/100 once every required question is answered. Progress saves as you go.</p>' +
+        '<a class="btn primary block" href="cv.html">Start the Startup CV →</a>';
+    }
+
+    document.body.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.dataset.trl !== undefined) st.trl = bank.trlOptions[+b.dataset.trl].label;
+      else if (b.dataset.mod) {
+        var i = st.modalities.indexOf(b.dataset.mod);
+        if (i >= 0) { if (st.modalities.length > 1) st.modalities.splice(i, 1); } else st.modalities.push(b.dataset.mod);
+      }
+      else if (b.dataset.ct) st.companyType = b.dataset.ct;
+      else if (b.dataset.round) st.round = b.dataset.round;
+      else return;
+      SB.save(); draw();
+    });
+    draw();
+  });
+</script>
+<style>@media (max-width: 860px) { .two { grid-template-columns: 1fr !important; } }</style>
+</body>
+</html>

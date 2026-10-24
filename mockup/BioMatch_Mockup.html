@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BioMatch – Startup CV mockup</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#F3F5F4}
+*{box-sizing:border-box}
+button,input{font:inherit;color:inherit}
+a{color:#0D6B5E}a:hover{color:#09493F}
+#switcher{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 16px;background:#12201E;font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;font-size:14px}
+#switcher span{color:#D2DCDA;margin-right:8px}
+#switcher button{min-height:36px;padding:0 12px;border-radius:8px;border:1px solid #3B4B48;background:transparent;color:#FFFFFF;cursor:pointer}
+#switcher button[aria-pressed="true"]{background:#FFFFFF;color:#12201E;border-color:#FFFFFF;font-weight:600}
+</style>
+</head>
+<body>
+<nav id="switcher" aria-label="Mockup screens"><span>BioMatch mockup · demo data, fictional companies</span><button type="button" data-screen="Onboarding">1 · Stage and template</button><button type="button" data-screen="Main">2 · Startup CV builder</button><button type="button" data-screen="Deck">3 · Pitch deck scan</button><button type="button" data-screen="Preview">4 · What investors see</button></nav>
+<div id="app"></div>
+<template id="tpl-Onboarding"><div style="min-height: 100vh; background: #F3F5F4; color: #12201E; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1.5;">
+
+<header style="background: #FFFFFF; border-bottom: 1px solid #D9E1DF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 12px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; min-height: 68px;">
+<a href="#" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #12201E;">
+<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="11.5" cy="15" r="8.5" fill="none" stroke="{{accent}}" stroke-width="2.6"></circle><circle cx="18.5" cy="15" r="8.5" fill="none" stroke="#12201E" stroke-width="2.6"></circle></svg>
+<span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em;">BioMatch</span>
+</a>
+<ol aria-label="Setup steps" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px;">
+<li style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: #12201E; color: #FFFFFF; font-weight: 600;">1 Stage and template</li>
+<li style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: #FFFFFF; border: 1px solid #C9D3D0; color: #33433F;">2 Startup CV</li>
+<li style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: #FFFFFF; border: 1px solid #C9D3D0; color: #33433F;">3 Pitch deck</li>
+</ol>
+</div>
+</header>
+
+<main style="max-width: 1280px; margin: 0 auto; padding: 32px 32px 64px; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; flex-direction: column; gap: 10px; max-width: 760px;">
+<p style="margin: 0; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #52615E;">Step 1 of 3</p>
+<h1 style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 36px; line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance;">Tell us where you are. We pick the questions investors ask at your stage.</h1>
+<p style="margin: 0; color: #33433F; text-wrap: pretty;">Your development stage selects the template, so a discovery-stage spin-out is never scored on data it cannot have yet. Your modality adds a short module of its own.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start;">
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 28px;">
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 12px;">
+<legend style="padding: 0; margin-bottom: 12px; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">How far is your lead program?</legend>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 10px;">
+<sc-for list="{{trls}}" as="t" hint-placeholder-count="6">
+<sc-if value="{{t.selected}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{t.pick}}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-height: 96px; padding: 14px 16px; border-radius: 12px; border: 2px solid {{accent}}; background: #E1F0EC; text-align: left; cursor: pointer;">
+<span style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 17px; font-weight: 600; color: #0B2F2A;">{{t.trl}}</span><span style="padding: 2px 8px; border-radius: 999px; background: #12201E; color: #FFFFFF; font-size: 12px; font-weight: 500;">{{t.band}}</span></span>
+<span style="font-size: 14px; color: #12201E;">{{t.text}}</span>
+</button>
+</sc-if>
+<sc-if value="{{t.unselected}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{t.pick}}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-height: 96px; padding: 14px 16px; border-radius: 12px; border: 1px solid #C9D3D0; background: #FFFFFF; text-align: left; cursor: pointer;">
+<span style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 17px; font-weight: 600;">{{t.trl}}</span><span style="padding: 2px 8px; border-radius: 999px; background: #EEF2F1; color: #33433F; font-size: 12px; font-weight: 500;">{{t.band}}</span></span>
+<span style="font-size: 14px; color: #33433F;">{{t.text}}</span>
+</button>
+</sc-if>
+</sc-for>
+</div>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 12px;">
+<legend style="padding: 0; margin-bottom: 4px; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">Which modalities do you work with?</legend>
+<p style="margin: 0 0 4px; font-size: 14px; color: #52615E;">Each modality with a module adds three or four questions. Vaccines, radiopharmaceuticals and microbiome use the core questions only.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{{mods}}" as="m" hint-placeholder-count="12">
+<sc-if value="{{m.selected}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{m.toggle}}" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 2px solid {{accent}}; background: #E1F0EC; color: #0B2F2A; font-weight: 500; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><polyline points="3.5,8.5 6.5,11.5 12.5,4.5" fill="none" stroke="#0B4F46" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>{{m.label}}</button>
+</sc-if>
+<sc-if value="{{m.unselected}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{m.toggle}}" style="display: flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 1px solid #C9D3D0; background: #FFFFFF; cursor: pointer;">{{m.label}}</button>
+</sc-if>
+</sc-for>
+</div>
+</fieldset>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 28px;">
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 12px;">
+<legend style="padding: 0; margin-bottom: 12px; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">What kind of company are you?</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{{types}}" as="c" hint-placeholder-count="3">
+<sc-if value="{{c.selected}}" hint-placeholder-val="{{false}}"><button type="button" aria-pressed="true" onClick="{{c.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 2px solid {{accent}}; background: #E1F0EC; color: #0B2F2A; font-weight: 500; cursor: pointer;">{{c.label}}</button></sc-if>
+<sc-if value="{{c.unselected}}" hint-placeholder-val="{{true}}"><button type="button" aria-pressed="false" onClick="{{c.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 1px solid #C9D3D0; background: #FFFFFF; cursor: pointer;">{{c.label}}</button></sc-if>
+</sc-for>
+</div>
+</fieldset>
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 12px;">
+<legend style="padding: 0; margin-bottom: 12px; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">Which round are you raising?</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{{rounds}}" as="r" hint-placeholder-count="6">
+<sc-if value="{{r.selected}}" hint-placeholder-val="{{false}}"><button type="button" aria-pressed="true" onClick="{{r.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 2px solid {{accent}}; background: #E1F0EC; color: #0B2F2A; font-weight: 500; cursor: pointer;">{{r.label}}</button></sc-if>
+<sc-if value="{{r.unselected}}" hint-placeholder-val="{{true}}"><button type="button" aria-pressed="false" onClick="{{r.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 1px solid #C9D3D0; background: #FFFFFF; cursor: pointer;">{{r.label}}</button></sc-if>
+</sc-for>
+</div>
+</fieldset>
+</div>
+</div>
+
+<aside aria-labelledby="template-title" style="flex: 1 1 340px; min-width: 0; background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<p style="margin: 0; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #52615E;">Your template</p>
+<h2 id="template-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 26px; font-weight: 600; letter-spacing: -0.01em;">{{bandTitle}}</h2>
+<p style="margin: 0; font-size: 14px; color: #33433F;">{{bandTrl}}</p>
+</div>
+<dl style="margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+<div style="padding: 12px; border-radius: 10px; background: #F3F5F4; display: flex; flex-direction: column-reverse; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Scored questions</dt><dd style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 28px; font-weight: 700;">{{scored}}</dd></div>
+<div style="padding: 12px; border-radius: 10px; background: #F3F5F4; display: flex; flex-direction: column-reverse; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Required</dt><dd style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 28px; font-weight: 700;">{{required}}</dd></div>
+<div style="padding: 12px; border-radius: 10px; background: #F3F5F4; display: flex; flex-direction: column-reverse; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Optional bonus</dt><dd style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 28px; font-weight: 700;">{{optional}}</dd></div>
+<div style="padding: 12px; border-radius: 10px; background: #F3F5F4; display: flex; flex-direction: column-reverse; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">About</dt><dd style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 28px; font-weight: 700;">{{minutes}}</dd></div>
+</dl>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<h3 style="margin: 0; font-size: 14px; font-weight: 600;">Modules</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 6px;">
+<sc-for list="{{modules}}" as="md" hint-placeholder-count="1"><span style="padding: 4px 10px; border-radius: 999px; background: #E1F0EC; color: #0B4F46; font-size: 13px; font-weight: 500;">{{md.label}}</span></sc-for>
+<sc-if value="{{noModules}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #52615E;">Core questions only</span></sc-if>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<h3 style="margin: 0; font-size: 14px; font-weight: 600;">Weighs most at this stage</h3>
+<p style="margin: 0; font-size: 14px; color: #33433F;">{{topWeights}}</p>
+<sc-if value="{{cgt}}" hint-placeholder-val="{{false}}"><p style="margin: 0; font-size: 13px; color: #33433F;">Cell and gene therapy: 5 points move from Science to CMC.</p></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<h3 style="margin: 0; font-size: 14px; font-weight: 600;">What investors expect at this stage</h3>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: #33433F;">
+<sc-for list="{{expect}}" as="e" hint-placeholder-count="3"><li>{{e.text}}</li></sc-for>
+</ul>
+</div>
+<sc-if value="{{unusualRound}}" hint-placeholder-val="{{false}}">
+<div style="padding: 12px 14px; border-radius: 10px; background: #FCF1DF; display: flex; gap: 10px; align-items: flex-start;">
+<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: 0 0 auto;"><circle cx="10" cy="10" r="8.5" fill="#FCF1DF" stroke="#A15C07" stroke-width="1.5"></circle><line x1="10" y1="5.5" x2="10" y2="11" stroke="#A15C07" stroke-width="2" stroke-linecap="round"></line><circle cx="10" cy="14" r="1.2" fill="#A15C07"></circle></svg>
+<p style="margin: 0; font-size: 13px; color: #5C3A00;">{{roundWarning}}</p>
+</div>
+</sc-if>
+<p style="margin: 0; padding-top: 4px; border-top: 1px solid #E3E9E7; font-size: 13px; color: #52615E;">You are listed at 60/100 once every required question is answered. Progress saves as you go.</p>
+<a href="Main.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 18px; border-radius: 10px; background: {{accent}}; color: #FFFFFF; font-weight: 600; text-decoration: none;">Start the Startup CV</a>
+</aside>
+</div>
+</main>
+</div></template>
+<template id="tpl-Main"><div style="min-height: 100vh; background: #F3F5F4; color: #12201E; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1.5;">
+
+<header style="background: #FFFFFF; border-bottom: 1px solid #D9E1DF;">
+<div style="max-width: 1440px; margin: 0 auto; padding: 12px 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px;">
+<a href="#" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #12201E;">
+<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="11.5" cy="15" r="8.5" fill="none" stroke="{{accent}}" stroke-width="2.6"></circle><circle cx="18.5" cy="15" r="8.5" fill="none" stroke="#12201E" stroke-width="2.6"></circle></svg>
+<span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em;">BioMatch</span>
+</a>
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 4px; flex: 1 1 auto;">
+<a href="#" aria-current="page" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 8px; background: #E1F0EC; color: #0B4F46; font-weight: 600; text-decoration: none;">Startup CV</a>
+<a href="Preview.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 8px; color: #33433F; text-decoration: none;">Investor view</a>
+<a href="#" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 8px; color: #33433F; text-decoration: none;">Matches</a>
+<a href="#" style="display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 8px; color: #33433F; text-decoration: none;">Intro requests</a>
+</nav>
+<div style="display: flex; align-items: center; gap: 12px;">
+<span style="font-size: 14px; color: #52615E;">Nuvaris Therapeutics</span>
+<span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 50%; background: #12201E; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px;">NT</span>
+</div>
+</div>
+</header>
+
+<main style="max-width: 1440px; margin: 0 auto; padding: 28px 32px 64px; display: flex; flex-direction: column; gap: 24px;">
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 10px; flex: 1 1 520px; min-width: 0;">
+<p style="margin: 0; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #52615E;">Startup CV · Nuvaris Therapeutics</p>
+<h1 style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 34px; line-height: 1.15; letter-spacing: -0.02em; text-wrap: balance;">Build the profile investors read before any NDA</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<span style="padding: 4px 10px; border-radius: 999px; background: #12201E; color: #FFFFFF; font-size: 13px; font-weight: 500;">D2 · Lead and candidate · TRL 4</span>
+<span style="padding: 4px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid #C9D3D0; font-size: 13px;">Small-molecule module</span>
+<span style="padding: 4px 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid #C9D3D0; font-size: 13px;">Seed · raising €8–10M</span>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 220px;">
+<span style="font-size: 13px; color: #33433F;">{{answeredText}}</span>
+<div style="height: 6px; border-radius: 3px; background: #DDE4E2; overflow: hidden;"><div style="height: 6px; border-radius: 3px; width: {{progressPct}}%; background: {{accent}};"></div></div>
+</div>
+<a href="Onboarding.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9D3D0; background: #FFFFFF; color: #12201E; font-weight: 500; text-decoration: none;">Change stage</a>
+<a href="Preview.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 10px; background: {{accent}}; color: #FFFFFF; font-weight: 600; text-decoration: none;">Preview as investor</a>
+</div>
+</div>
+
+<div style="display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 12px;">
+<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="flex: 0 0 auto; margin-top: 1px;"><path d="M12 3 L19 6 V11.5 C19 16 16 19.2 12 21 C8 19.2 5 16 5 11.5 V6 Z" fill="none" stroke="#0D6B5E" stroke-width="1.8" stroke-linejoin="round"></path><polyline points="8.8,12 11,14.2 15.4,9.6" fill="none" stroke="#0D6B5E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+<p style="margin: 0; color: #33433F;"><strong style="color: #12201E;">Non-confidential by design.</strong> Verified investors can read everything you enter here without an NDA. Say what your science does, never how – no structures, sequences or unpublished data.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start;">
+
+<nav aria-label="CV sections" style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<p style="margin: 0 0 2px; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #52615E;">Setup</p>
+<a href="Onboarding.dc.html" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; padding: 10px 12px; border: 1px solid #D9E1DF; border-radius: 10px; background: #FFFFFF; color: #12201E; text-decoration: none;"><span>Stage and template</span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><polyline points="3.5,8.5 6.5,11.5 12.5,4.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg></a>
+<a href="#" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; padding: 10px 12px; border: 1px solid #D9E1DF; border-radius: 10px; background: #FFFFFF; color: #12201E; text-decoration: none;"><span>Company profile</span><span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; color: #33433F;">18/18</span></a>
+<a href="Deck.dc.html" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; padding: 10px 12px; border: 1px solid #D9E1DF; border-radius: 10px; background: #FFFFFF; color: #12201E; text-decoration: none;"><span>Pitch deck</span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><polyline points="3.5,8.5 6.5,11.5 12.5,4.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg></a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<p style="margin: 0 0 2px; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #52615E;">Scored sections</p>
+<sc-for list="{{nav}}" as="n" hint-placeholder-count="9">
+<sc-if value="{{n.active}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{n.go}}" aria-current="true" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 10px 12px; border: 2px solid {{accent}}; border-radius: 10px; background: #E1F0EC; text-align: left; cursor: pointer;">
+<span style="display: flex; flex-direction: column;"><span style="font-weight: 600; color: #0B2F2A;">{{n.name}}</span><sc-if value="{{n.hasOpen}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: #8A4B00;">{{n.openText}}</span></sc-if></span>
+<span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; color: #0B4F46;">{{n.count}}</span>
+</button>
+</sc-if>
+<sc-if value="{{n.inactive}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{n.go}}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #D9E1DF; border-radius: 10px; background: #FFFFFF; text-align: left; cursor: pointer;">
+<span style="display: flex; flex-direction: column;"><span style="color: #12201E;">{{n.name}}</span><sc-if value="{{n.hasOpen}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: #8A4B00;">{{n.openText}}</span></sc-if></span>
+<span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; color: #52615E;">{{n.count}}</span>
+</button>
+</sc-if>
+</sc-for>
+</div>
+</nav>
+
+<section aria-labelledby="section-title" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; padding: 2px 2px 4px;">
+<div style="display: flex; flex-direction: column; gap: 6px; flex: 1 1 360px; min-width: 0;">
+<h2 id="section-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 26px; font-weight: 600; letter-spacing: -0.01em;">{{section}}</h2>
+<p style="margin: 0; color: #33433F; text-wrap: pretty;">{{sectionNote}}</p>
+</div>
+<div style="display: flex; flex-direction: column; align-items: flex-end;">
+<span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 24px; font-weight: 600;">{{sectionPts}}</span>
+<span style="font-size: 12px; color: #52615E;">{{sectionWeight}}</span>
+</div>
+</div>
+
+<sc-for list="{{questions}}" as="q" hint-placeholder-count="6">
+<article style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between;">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+<span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; padding: 2px 8px; border-radius: 6px; background: #EEF2F1; color: #33433F;">{{q.id}}</span>
+<sc-if value="{{q.isRequired}}" hint-placeholder-val="{{true}}"><span style="font-size: 12px; font-weight: 600; color: #0B4F46;">Required</span></sc-if>
+<sc-if value="{{q.isOptional}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; font-weight: 600; color: #52615E;">Optional bonus</span></sc-if>
+<sc-if value="{{q.isModule}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: #52615E;">Small-molecule module</span></sc-if>
+</div>
+<sc-if value="{{q.answered}}" hint-placeholder-val="{{true}}"><span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; color: #33433F;">{{q.scoreText}}</span></sc-if>
+<sc-if value="{{q.unanswered}}" hint-placeholder-val="{{false}}"><span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; font-weight: 500; color: #8A4B00;">{{q.scoreText}}</span></sc-if>
+</div>
+<h3 style="margin: 0; font-size: 17px; font-weight: 600; line-height: 1.35; text-wrap: pretty;">{{q.prompt}}</h3>
+<sc-if value="{{q.hasHelp}}" hint-placeholder-val="{{false}}"><p style="margin: -6px 0 0; font-size: 14px; color: #52615E;">{{q.help}}</p></sc-if>
+
+<sc-if value="{{q.isSingle}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{{q.options}}" as="o" hint-placeholder-count="4">
+<sc-if value="{{o.selected}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{o.pick}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 14px; border-radius: 10px; border: 2px solid {{accent}}; background: #E1F0EC; color: #0B2F2A; font-weight: 500; text-align: left; cursor: pointer;">
+<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" style="flex: 0 0 auto;"><polyline points="3.5,8.5 6.5,11.5 12.5,4.5" fill="none" stroke="#0B4F46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+<span>{{o.label}}</span>
+<span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; color: #0B4F46;">{{o.pts}}</span>
+</button>
+</sc-if>
+<sc-if value="{{o.unselected}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{o.pick}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 14px; border-radius: 10px; border: 1px solid #C9D3D0; background: #FFFFFF; color: #12201E; text-align: left; cursor: pointer;">
+<span>{{o.label}}</span>
+<span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; color: #52615E;">{{o.pts}}</span>
+</button>
+</sc-if>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{q.isChecklist}}" hint-placeholder-val="{{false}}">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 8px;">
+<sc-for list="{{q.items}}" as="it" hint-placeholder-count="8">
+<sc-if value="{{it.checked}}" hint-placeholder-val="{{false}}">
+<label style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 10px 12px; border: 2px solid {{accent}}; border-radius: 10px; background: #E1F0EC; cursor: pointer;">
+<input type="checkbox" checked="{{it.checked}}" onChange="{{it.toggle}}" style="width: 18px; height: 18px; margin: 0; accent-color: {{accent}};">
+<span style="display: flex; flex-direction: column;"><span style="color: #0B2F2A; font-weight: 500;">{{it.label}}</span><span style="font-size: 12px; color: #33433F;">{{it.tag}}</span></span>
+</label>
+</sc-if>
+<sc-if value="{{it.unchecked}}" hint-placeholder-val="{{true}}">
+<label style="display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 10px 12px; border: 1px solid #C9D3D0; border-radius: 10px; background: #FFFFFF; cursor: pointer;">
+<input type="checkbox" checked="{{it.checked}}" onChange="{{it.toggle}}" style="width: 18px; height: 18px; margin: 0; accent-color: {{accent}};">
+<span style="display: flex; flex-direction: column;"><span>{{it.label}}</span><span style="font-size: 12px; color: #52615E;">{{it.tag}}</span></span>
+</label>
+</sc-if>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{q.isNumber}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+<label style="display: flex; align-items: center; gap: 10px; font-weight: 500;">Months
+<input type="text" value="{{q.numberValue}}" onChange="{{q.onNumber}}" style="width: 96px; min-height: 44px; padding: 8px 12px; border: 1px solid #C9D3D0; border-radius: 10px; background: #FFFFFF; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 16px;">
+</label>
+<span style="font-size: 13px; color: #52615E;">24 or less scores 1 · 25–36 scores 0.7 · over 36 scores 0.4</span>
+</div>
+</sc-if>
+
+<sc-if value="{{q.hasProof}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 10px; background: #F4F7FC; border: 1px solid #D3DCEB;">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #1E3A6E;">{{q.proofLabel}} – needed for full points
+<input type="text" value="{{q.proofValue}}" onChange="{{q.onProof}}" placeholder="Public identifier only" style="min-height: 44px; padding: 8px 12px; border: 1px solid #B6C3D9; border-radius: 8px; background: #FFFFFF; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 14px; font-weight: 400; color: #12201E;">
+</label>
+<sc-if value="{{q.proofVerified}}" hint-placeholder-val="{{false}}">
+<span style="display: flex; gap: 6px; align-items: center; font-size: 13px; font-weight: 500; color: #1F4E9A;"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="#1F4E9A"></circle><polyline points="4.8,8.3 7,10.4 11.2,5.8" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>{{q.proofText}}</span>
+</sc-if>
+<sc-if value="{{q.proofLinked}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #33433F;">{{q.proofText}}</span></sc-if>
+<sc-if value="{{q.proofMissing}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; font-weight: 500; color: #8A4B00;">{{q.proofText}}</span></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{q.hasBullets}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{q.bullets}}" as="b" hint-placeholder-count="3">
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 600; color: #33433F;">{{b.n}}
+<input type="text" value="{{b.value}}" onChange="{{b.onInput}}" style="min-height: 44px; padding: 8px 12px; border: 1px solid #C9D3D0; border-radius: 8px; background: #FFFFFF; font-size: 15px; font-weight: 400; color: #12201E;">
+</label>
+</sc-for>
+<p style="margin: 0; font-size: 12px; color: #52615E;">Max 120 characters each. Visible to investors – no unpublished data, nothing that needs an NDA.</p>
+</div>
+</sc-if>
+</article>
+</sc-for>
+</section>
+
+<aside aria-label="Readiness" style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+
+<section aria-labelledby="readiness-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 18px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+<h2 id="readiness-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 600;">Readiness Score</h2>
+<sc-if value="{{isListed}}" hint-placeholder-val="{{false}}"><span style="padding: 4px 10px; border-radius: 999px; background: {{accent}}; color: #FFFFFF; font-size: 13px; font-weight: 600;">{{level}}</span></sc-if>
+<sc-if value="{{isDraft}}" hint-placeholder-val="{{true}}"><span style="padding: 4px 10px; border-radius: 999px; background: #EEF2F1; color: #33433F; font-size: 13px; font-weight: 600;">{{level}}</span></sc-if>
+</div>
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+<div role="img" aria-label="Readiness {{score}} of 100; listing threshold 60" style="position: relative; flex: 0 0 auto; width: 148px; height: 148px; border-radius: 50%; {{ring}};">
+<div style="position: absolute; top: 15px; right: 15px; bottom: 15px; left: 15px; border-radius: 50%; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+<span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 38px; font-weight: 700; line-height: 1;">{{score}}</span>
+<span style="font-size: 12px; color: #52615E;">of 100</span>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 72px; top: -3px; width: 4px; height: 77px; transform-origin: 2px 77px; transform: rotate(216deg);"><div style="width: 4px; height: 21px; border-radius: 2px; background: #12201E;"></div></div>
+</div>
+<div style="flex: 1 1 140px; display: flex; flex-direction: column; gap: 6px;">
+<p style="margin: 0; font-weight: 600; text-wrap: pretty;">{{statusText}}</p>
+<p style="margin: 0; font-size: 13px; color: #52615E;">The dark tick marks the listing line at 60. Investor-ready from 75.</p>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="steps-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 2px;">
+<h2 id="steps-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 600;">Next best steps</h2>
+<p style="margin: 0; font-size: 13px; color: #52615E;">Ranked by how much each step raises your score.</p>
+</div>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+<sc-for list="{{actions}}" as="a" hint-placeholder-count="3">
+<li>
+<button type="button" onClick="{{a.go}}" style="width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; padding: 10px 12px; border: 1px solid #D9E1DF; border-radius: 10px; background: #FFFFFF; text-align: left; cursor: pointer;">
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+<span style="font-weight: 500;">{{a.text}}</span>
+<sc-if value="{{a.isQuick}}" hint-placeholder-val="{{true}}"><span style="font-size: 12px; font-weight: 600; color: #0B4F46;">Quick win</span></sc-if>
+<sc-if value="{{a.isMilestone}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; font-weight: 600; color: #52615E;">Milestone</span></sc-if>
+</span>
+<span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 13px; font-weight: 500; color: #0B4F46; white-space: nowrap;">{{a.gain}}</span>
+</button>
+</li>
+</sc-for>
+</ol>
+</section>
+
+<section aria-labelledby="checks-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+<h2 id="checks-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 600;">Listing checks</h2>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{gates}}" as="g" hint-placeholder-count="5">
+<li style="display: flex; gap: 10px; align-items: center;">
+<sc-if value="{{g.pass}}" hint-placeholder-val="{{true}}"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: 0 0 auto;"><circle cx="10" cy="10" r="8.5" fill="#E1F0EC" stroke="#0D6B5E" stroke-width="1.5"></circle><polyline points="6,10.5 8.8,13 14,7.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg></sc-if>
+<sc-if value="{{g.fail}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: 0 0 auto;"><circle cx="10" cy="10" r="8.5" fill="#FCF1DF" stroke="#A15C07" stroke-width="1.5"></circle><line x1="10" y1="5.5" x2="10" y2="11" stroke="#A15C07" stroke-width="2" stroke-linecap="round"></line><circle cx="10" cy="14" r="1.2" fill="#A15C07"></circle></svg></sc-if>
+<span style="font-size: 14px;">{{g.label}}</span>
+</li>
+</sc-for>
+</ul>
+<sc-if value="{{hasFlags}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<sc-for list="{{flags}}" as="f" hint-placeholder-count="1">
+<div style="padding: 10px 12px; border-radius: 10px; background: #FCF1DF; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 13px; color: #5C3A00;">{{f.text}}</span>
+<sc-if value="{{f.unconfirmed}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{f.confirm}}" style="align-self: flex-start; min-height: 44px; padding: 8px 14px; border-radius: 8px; border: 1px solid #A15C07; background: #FFFFFF; color: #5C3A00; font-weight: 600; cursor: pointer;">Confirm – this is correct</button></sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</section>
+
+<section aria-labelledby="dims-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+<h2 id="dims-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 600;">Score by dimension</h2>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px;">
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="9">
+<li style="display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px;"><span>{{b.name}}</span><span style="font-family: 'IBM Plex Mono', Menlo, monospace; color: #33433F;">{{b.pts}} / {{b.w}}</span></div>
+<div style="height: 8px; border-radius: 4px; background: #E3E9E7; overflow: hidden;"><div style="height: 8px; border-radius: 4px; width: {{b.pct}}%; background: {{accent}};"></div></div>
+</li>
+</sc-for>
+</ul>
+</section>
+
+<section aria-labelledby="evidence-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+<h2 id="evidence-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 600;">Evidence confidence</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
+<div style="padding: 10px 12px; border-radius: 10px; background: #E9EFFA; display: flex; flex-direction: column;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 24px; font-weight: 700; color: #1F4E9A;">{{evVerified}}</span><span style="font-size: 12px; color: #1E3A6E;">Registry-verified</span></div>
+<div style="padding: 10px 12px; border-radius: 10px; background: #EEF2F1; display: flex; flex-direction: column;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 24px; font-weight: 700; color: #33433F;">{{evLinked}}</span><span style="font-size: 12px; color: #33433F;">Linked</span></div>
+<div style="padding: 10px 12px; border-radius: 10px; background: #FCF1DF; display: flex; flex-direction: column;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 24px; font-weight: 700; color: #8A4B00;">{{evMissing}}</span><span style="font-size: 12px; color: #5C3A00;">Missing proof</span></div>
+</div>
+<p style="margin: 0; font-size: 13px; color: #52615E;">DOIs, patent numbers and trial IDs are checked against public registries and count fully; links count half. Investors see this as a badge.</p>
+</section>
+
+</aside>
+</div>
+</main>
+</div></template>
+<template id="tpl-Deck"><div style="min-height: 100vh; background: #F3F5F4; color: #12201E; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1.5;">
+
+<header style="background: #FFFFFF; border-bottom: 1px solid #D9E1DF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 12px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; min-height: 68px;">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #12201E;">
+<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="11.5" cy="15" r="8.5" fill="none" stroke="{{accent}}" stroke-width="2.6"></circle><circle cx="18.5" cy="15" r="8.5" fill="none" stroke="#12201E" stroke-width="2.6"></circle></svg>
+<span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em;">BioMatch</span>
+</a>
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9D3D0; background: #FFFFFF; color: #12201E; font-weight: 500; text-decoration: none;"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><polyline points="10,3.5 5.5,8 10,12.5" fill="none" stroke="#12201E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>Back to the Startup CV</a>
+</div>
+</header>
+
+<main style="max-width: 1280px; margin: 0 auto; padding: 32px 32px 64px; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; flex-direction: column; gap: 10px; max-width: 760px;">
+<p style="margin: 0; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #52615E;">Pitch deck · Listing check 1 of 5</p>
+<h1 style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 36px; line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance;">Upload the deck you would send before an NDA</h1>
+<p style="margin: 0; color: #33433F; text-wrap: pretty;">Every upload is scanned before it is stored. Anything that looks confidential stops here – it never reaches an investor.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start;">
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+
+<section aria-labelledby="upload-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 16px;">
+<h2 id="upload-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">Your deck</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 16px; border-radius: 12px; background: #F3F5F4;">
+<div style="display: flex; align-items: center; gap: 14px; min-width: 0;">
+<svg width="36" height="44" viewBox="0 0 36 44" aria-hidden="true" style="flex: 0 0 auto;"><path d="M4 2 H24 L34 12 V42 H4 Z" fill="#FFFFFF" stroke="#33433F" stroke-width="1.6" stroke-linejoin="round"></path><polyline points="24,2 24,12 34,12" fill="none" stroke="#33433F" stroke-width="1.6" stroke-linejoin="round"></polyline><rect x="8" y="26" width="22" height="9" rx="2" fill="#12201E"></rect></svg>
+<div style="display: flex; flex-direction: column; min-width: 0;">
+<span style="font-weight: 600; overflow-wrap: anywhere;">{{fileName}}</span>
+<span style="font-size: 13px; color: #52615E;">{{fileMeta}}</span>
+</div>
+</div>
+<button type="button" onClick="{{replace}}" style="min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9D3D0; background: #FFFFFF; font-weight: 500; cursor: pointer;">Upload a new version</button>
+</div>
+<p style="margin: 0; font-size: 13px; color: #52615E;">PDF only · up to 25 MB · ideally no more than 15 main slides · the title slide says “Non-confidential” · no P&amp;L, cash flow or other financial statements.</p>
+</section>
+
+<section aria-labelledby="scan-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px;">
+<h2 id="scan-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">Confidentiality scan</h2>
+<span style="font-size: 14px; font-weight: 500; color: #33433F;">{{scanSummary}}</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<sc-if value="{{f1Open}}" hint-placeholder-val="{{true}}">
+<article style="padding: 14px 16px; border-radius: 12px; background: #FDECEA; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;"><span style="padding: 2px 8px; border-radius: 6px; background: #B42318; color: #FFFFFF; font-size: 12px; font-weight: 600;">Blocked</span><span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; color: #6E1A12;">Slide 11</span></div>
+<h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #4A120C;">Sequence-like string found (27 nucleotide letters)</h3>
+<p style="margin: 0; font-size: 14px; color: #6E1A12;">Sequences, structures and constructs are never stored on BioMatch. Remove the string from the slide and upload a new version.</p>
+<button type="button" onClick="{{resolveF1}}" style="align-self: flex-start; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #B42318; background: #FFFFFF; color: #6E1A12; font-weight: 600; cursor: pointer;">Upload the corrected deck</button>
+</article>
+</sc-if>
+<sc-if value="{{f1Done}}" hint-placeholder-val="{{false}}">
+<article style="padding: 12px 16px; border-radius: 12px; background: #E1F0EC; display: flex; gap: 10px; align-items: center;">
+<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: 0 0 auto;"><circle cx="10" cy="10" r="8.5" fill="#E1F0EC" stroke="#0D6B5E" stroke-width="1.5"></circle><polyline points="6,10.5 8.8,13 14,7.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+<span style="font-size: 14px; color: #0B2F2A;">Slide 11 – sequence removed in the new version.</span>
+</article>
+</sc-if>
+
+<sc-if value="{{f2Open}}" hint-placeholder-val="{{true}}">
+<article style="padding: 14px 16px; border-radius: 12px; background: #FCF1DF; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;"><span style="padding: 2px 8px; border-radius: 6px; background: #8A4B00; color: #FFFFFF; font-size: 12px; font-weight: 600;">Check</span><span style="font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; color: #5C3A00;">Slide 7</span></div>
+<h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #3D2600;">The word “proprietary” appears on this slide</h3>
+<p style="margin: 0; font-size: 14px; color: #5C3A00;">If the slide only says that a method is proprietary, confirm it. If it shows the method itself, replace the slide.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<button type="button" onClick="{{resolveF2}}" style="min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #8A4B00; background: #FFFFFF; color: #3D2600; font-weight: 600; cursor: pointer;">It is public – confirm</button>
+<button type="button" onClick="{{replace}}" style="min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9D3D0; background: #FFFFFF; font-weight: 500; cursor: pointer;">Replace the file</button>
+</div>
+</article>
+</sc-if>
+<sc-if value="{{f2Done}}" hint-placeholder-val="{{false}}">
+<article style="padding: 12px 16px; border-radius: 12px; background: #E1F0EC; display: flex; gap: 10px; align-items: center;">
+<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: 0 0 auto;"><circle cx="10" cy="10" r="8.5" fill="#E1F0EC" stroke="#0D6B5E" stroke-width="1.5"></circle><polyline points="6,10.5 8.8,13 14,7.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+<span style="font-size: 14px; color: #0B2F2A;">Slide 7 – confirmed as public.</span>
+</article>
+</sc-if>
+
+<article style="padding: 12px 16px; border-radius: 12px; background: #EEF2F1; display: flex; gap: 10px; align-items: flex-start;">
+<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: 0 0 auto; margin-top: 2px;"><circle cx="10" cy="10" r="8.5" fill="#FFFFFF" stroke="#52615E" stroke-width="1.5"></circle><line x1="10" y1="9" x2="10" y2="14.5" stroke="#52615E" stroke-width="2" stroke-linecap="round"></line><circle cx="10" cy="6" r="1.2" fill="#52615E"></circle></svg>
+<span style="font-size: 14px; color: #33433F;">Removed before storage: author names, speaker notes and comments in the file.</span>
+</article>
+</div>
+</section>
+
+<section aria-labelledby="attest-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
+<h2 id="attest-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">Confirm before listing</h2>
+<label style="display: flex; gap: 12px; align-items: flex-start; min-height: 44px; cursor: pointer;">
+<input type="checkbox" checked="{{attested}}" onChange="{{toggleAttest}}" style="width: 20px; height: 20px; margin: 2px 0 0; flex: 0 0 auto; accent-color: {{accent}};">
+<span>This deck contains no confidential information. Everything in it may be shared with verified investors without an NDA.</span>
+</label>
+<sc-if value="{{cleared}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 10px; background: #E1F0EC;">
+<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: 0 0 auto;"><circle cx="10" cy="10" r="8.5" fill="#E1F0EC" stroke="#0D6B5E" stroke-width="1.5"></circle><polyline points="6,10.5 8.8,13 14,7.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+<span style="font-weight: 600; color: #0B2F2A;">Deck cleared – listing check 1 passed.</span>
+</div>
+</sc-if>
+<sc-if value="{{notCleared}}" hint-placeholder-val="{{true}}">
+<p style="margin: 0; font-size: 14px; color: #5C3A00;">{{blockText}}</p>
+</sc-if>
+</section>
+</div>
+
+<aside style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+<section aria-labelledby="slides-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 2px;">
+<h2 id="slides-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 600;">What investors look for</h2>
+<p style="margin: 0; font-size: 13px; color: #52615E;">Read from your slide titles. Not scored – a checklist for a stronger deck.</p>
+</div>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+<sc-for list="{{slides}}" as="s" hint-placeholder-count="12">
+<li style="display: flex; gap: 10px; align-items: flex-start;">
+<sc-if value="{{s.found}}" hint-placeholder-val="{{true}}"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: 0 0 auto;"><circle cx="10" cy="10" r="8.5" fill="#E1F0EC" stroke="#0D6B5E" stroke-width="1.5"></circle><polyline points="6,10.5 8.8,13 14,7.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg></sc-if>
+<sc-if value="{{s.missing}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: 0 0 auto;"><circle cx="10" cy="10" r="8.5" fill="#FFFFFF" stroke="#8A4B00" stroke-width="1.5" stroke-dasharray="3 2.5"></circle></svg></sc-if>
+<span style="display: flex; flex-direction: column;"><span style="font-size: 14px;">{{s.label}}</span><sc-if value="{{s.hasNote}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: #8A4B00;">{{s.note}}</span></sc-if></span>
+</li>
+</sc-for>
+</ul>
+</section>
+
+<section aria-labelledby="vis-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 12px;">
+<h2 id="vis-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 600;">Who can open it</h2>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: #33433F;">
+<li>Verified investors only</li>
+<li>Every page watermarked with the viewer's name and fund</li>
+<li>You see each investor who opens it</li>
+</ul>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 8px; border-top: 1px solid #E3E9E7;">
+<span id="dl-label" style="font-size: 14px; font-weight: 500;">Allow download</span>
+<sc-if value="{{download}}" hint-placeholder-val="{{false}}"><button type="button" aria-pressed="true" aria-labelledby="dl-label" onClick="{{toggleDownload}}" style="width: 52px; height: 30px; padding: 3px; border-radius: 999px; border: 0; background: {{accent}}; display: flex; justify-content: flex-end; cursor: pointer;"><span style="width: 24px; height: 24px; border-radius: 50%; background: #FFFFFF;"></span></button></sc-if>
+<sc-if value="{{noDownload}}" hint-placeholder-val="{{true}}"><button type="button" aria-pressed="false" aria-labelledby="dl-label" onClick="{{toggleDownload}}" style="width: 52px; height: 30px; padding: 3px; border-radius: 999px; border: 0; background: #B8C4C1; display: flex; justify-content: flex-start; cursor: pointer;"><span style="width: 24px; height: 24px; border-radius: 50%; background: #FFFFFF;"></span></button></sc-if>
+</div>
+</section>
+</aside>
+</div>
+</main>
+</div></template>
+<template id="tpl-Preview"><div style="min-height: 100vh; background: #F3F5F4; color: #12201E; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1.5;">
+
+<header style="background: #FFFFFF; border-bottom: 1px solid #D9E1DF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 12px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; min-height: 68px;">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #12201E;">
+<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="11.5" cy="15" r="8.5" fill="none" stroke="{{accent}}" stroke-width="2.6"></circle><circle cx="18.5" cy="15" r="8.5" fill="none" stroke="#12201E" stroke-width="2.6"></circle></svg>
+<span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em;">BioMatch</span>
+</a>
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9D3D0; background: #FFFFFF; color: #12201E; font-weight: 500; text-decoration: none;"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><polyline points="10,3.5 5.5,8 10,12.5" fill="none" stroke="#12201E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>Back to editing</a>
+</div>
+</header>
+
+<div style="background: #12201E; color: #FFFFFF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 12px 32px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 14px;">
+<span style="font-weight: 600;">Preview</span>
+<span style="color: #D2DCDA;">This is your profile as verified investors see it. Contact details stay hidden until you both accept an intro.</span>
+</div>
+</div>
+
+<main style="max-width: 1280px; margin: 0 auto; padding: 32px 32px 64px; display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start;">
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+
+<section aria-labelledby="co-name" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 26px; display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; flex-wrap: wrap; gap: 18px; align-items: center;">
+<span aria-hidden="true" style="width: 64px; height: 64px; border-radius: 14px; background: #12201E; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 24px; font-weight: 700;">N</span>
+<div style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 280px; min-width: 0;">
+<h1 id="co-name" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 32px; font-weight: 600; letter-spacing: -0.02em;">Nuvaris Therapeutics</h1>
+<p style="margin: 0; font-size: 17px; color: #33433F;">Oral, brain-penetrant small molecule for glioblastoma</p>
+</div>
+</div>
+<ul aria-label="Profile tags" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px;">
+<li style="padding: 4px 10px; border-radius: 999px; background: #12201E; color: #FFFFFF; font-size: 13px; font-weight: 500;">D2 · Lead and candidate</li>
+<li style="padding: 4px 10px; border-radius: 999px; border: 1px solid #C9D3D0; font-size: 13px;">Oncology</li>
+<li style="padding: 4px 10px; border-radius: 999px; border: 1px solid #C9D3D0; font-size: 13px;">Small molecule</li>
+<li style="padding: 4px 10px; border-radius: 999px; border: 1px solid #C9D3D0; font-size: 13px;">Seed</li>
+<li style="padding: 4px 10px; border-radius: 999px; border: 1px solid #C9D3D0; font-size: 13px;">Berlin, Germany</li>
+<li style="padding: 4px 10px; border-radius: 999px; border: 1px solid #C9D3D0; font-size: 13px;">University spin-out</li>
+</ul>
+<dl style="margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 16px 24px; padding-top: 16px; border-top: 1px solid #E3E9E7;">
+<div style="display: flex; flex-direction: column; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Lead indication</dt><dd style="margin: 0; font-weight: 500;">Glioblastoma</dd></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Raising</dt><dd style="margin: 0; font-weight: 500;">€8–10M seed · lead wanted</dd></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Runway after close</dt><dd style="margin: 0; font-weight: 500;">12–18 months</dd></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Next value-inflection point</dt><dd style="margin: 0; font-weight: 500;">In 18 months</dd></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">IP</dt><dd style="margin: 0; font-weight: 500;">Priority application filed · option agreement signed</dd></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Team</dt><dd style="margin: 0; font-weight: 500;">Two full-time founders · industry R&amp;D executive</dd></div>
+</dl>
+</section>
+
+<section aria-labelledby="diff-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px 26px; display: flex; flex-direction: column; gap: 12px;">
+<h2 id="diff-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">Best-in-class against today's standard of care</h2>
+<ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px;">
+<li>Brain exposure at an efficacious dose in mice</li>
+<li>Oral once-daily dosing</li>
+<li>Selective over related enzymes</li>
+</ul>
+</section>
+
+<section aria-labelledby="evidence-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px 26px; display: flex; flex-direction: column; gap: 14px;">
+<h2 id="evidence-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">Evidence so far</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 10px;">
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: #F3F5F4;"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="#E1F0EC" stroke="#0D6B5E" stroke-width="1.5"></circle><polyline points="6,10.5 8.8,13 14,7.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 14px;">In-vitro proof of concept</span></div>
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: #F3F5F4;"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="#E1F0EC" stroke="#0D6B5E" stroke-width="1.5"></circle><polyline points="6,10.5 8.8,13 14,7.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 14px;">Target engagement</span></div>
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: #F3F5F4;"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="#E1F0EC" stroke="#0D6B5E" stroke-width="1.5"></circle><polyline points="6,10.5 8.8,13 14,7.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 14px;">In-vivo efficacy in a disease model</span></div>
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: #F3F5F4;"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="#E1F0EC" stroke="#0D6B5E" stroke-width="1.5"></circle><polyline points="6,10.5 8.8,13 14,7.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 14px;">Early safety data</span></div>
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: #F3F5F4;"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="#E1F0EC" stroke="#0D6B5E" stroke-width="1.5"></circle><polyline points="6,10.5 8.8,13 14,7.5" fill="none" stroke="#0D6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-size: 14px;">Brain exposure measured in animals</span></div>
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: #FCF1DF;"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="#FFFFFF" stroke="#8A4B00" stroke-width="1.5" stroke-dasharray="3 2.5"></circle></svg><span style="font-size: 14px; color: #3D2600;">PK/PD relationship – next milestone</span></div>
+</div>
+<p style="margin: 0; font-size: 13px; color: #52615E;">Key result reproduced in-house in independent experiments. Preprint verified via Crossref.</p>
+</section>
+
+<section aria-labelledby="docs-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px 26px; display: flex; flex-direction: column; gap: 12px;">
+<h2 id="docs-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">Documents</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+<button type="button" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9D3D0; background: #FFFFFF; font-weight: 500; cursor: pointer;">Non-confidential deck · 14 slides · watermarked viewer</button>
+<button type="button" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9D3D0; background: #FFFFFF; font-weight: 500; cursor: pointer;">One-page summary · generated from the CV</button>
+</div>
+</section>
+</div>
+
+<aside style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+<section aria-labelledby="ready-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+<h2 id="ready-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 600;">Readiness</h2>
+<span style="padding: 4px 10px; border-radius: 999px; background: {{accent}}; color: #FFFFFF; font-size: 13px; font-weight: 600;">Listed</span>
+</div>
+<div style="display: flex; align-items: baseline; gap: 8px;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 44px; font-weight: 700; line-height: 1;">65.2</span><span style="color: #52615E;">of 100 · D2 template</span></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
+<div style="padding: 10px 12px; border-radius: 10px; background: #E9EFFA; display: flex; flex-direction: column;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; font-weight: 700; color: #1F4E9A;">1</span><span style="font-size: 12px; color: #1E3A6E;">Registry-verified</span></div>
+<div style="padding: 10px 12px; border-radius: 10px; background: #EEF2F1; display: flex; flex-direction: column;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; font-weight: 700; color: #33433F;">2</span><span style="font-size: 12px; color: #33433F;">Linked</span></div>
+<div style="padding: 10px 12px; border-radius: 10px; background: #F3F5F4; display: flex; flex-direction: column;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; font-weight: 700; color: #33433F;">0</span><span style="font-size: 12px; color: #33433F;">Open questions</span></div>
+</div>
+</section>
+
+<section aria-labelledby="match-title" style="background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; flex-direction: column; gap: 2px;">
+<h2 id="match-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 18px; font-weight: 600;">Your best-matching investors</h2>
+<p style="margin: 0; font-size: 13px; color: #52615E;">Demo funds. The score weighs both sides' fit equally.</p>
+</div>
+<article style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 12px; border: 2px solid {{accent}};">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;"><h3 style="margin: 0; font-size: 15px; font-weight: 600;">Rheinland Bio Ventures</h3><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; font-weight: 700; color: #0B4F46;">95</span></div>
+<span style="font-size: 12px; font-weight: 600; color: #0B4F46;">Strong match</span>
+<p style="margin: 0; font-size: 13px; color: #33433F;">Covers oncology and small molecules, leads DACH seed rounds, offers company building, CMC and pharma-BD help. Gap: your readiness.</p>
+<button type="button" style="align-self: flex-start; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 0; background: {{accent}}; color: #FFFFFF; font-weight: 600; cursor: pointer;">Request an intro</button>
+</article>
+<article style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 12px; border: 1px solid #D9E1DF;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;"><h3 style="margin: 0; font-size: 15px; font-weight: 600;">Helvetia Life Science Fund</h3><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; font-weight: 700; color: #33433F;">68</span></div>
+<span style="font-size: 12px; font-weight: 600; color: #33433F;">Good match · portfolio overlap −10</span>
+<p style="margin: 0; font-size: 13px; color: #33433F;">Area, modality and ticket fit. A portfolio company works on the same target and indication. Gap: value-add.</p>
+<button type="button" style="align-self: flex-start; min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9D3D0; background: #FFFFFF; font-weight: 500; cursor: pointer;">Request an intro</button>
+</article>
+<p style="margin: 0; font-size: 13px; color: #52615E;">One weak match is hidden by default; one fund is filtered out by its own must-haves. You can have 10 open intro requests – text only, no attachments.</p>
+</section>
+</aside>
+</main>
+</div></template>
+<script>
+/* Minimal runtime for the .dc.html format: {{holes}}, <sc-for>, <sc-if>, onClick/onChange. */
+var COMPONENTS = {};
+var current = null;
+class DCLogic {
+  constructor(props) { this.props = props || {}; this.state = {}; }
+  setState(patch) { Object.assign(this.state, typeof patch === 'function' ? patch(this.state) : patch); if (this._render) this._render(); }
+  forceUpdate() { if (this._render) this._render(); }
+}
+COMPONENTS["Onboarding"] = (function (DCLogic) {
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.TRL = [
+      ['TRL 1–2', 'Research idea and protocols', 'D1'],
+      ['TRL 3', 'Hypothesis testing, first proof of concept in a limited number of models', 'D1'],
+      ['TRL 4', 'Candidate proof of concept and early safety in a defined model', 'D2'],
+      ['TRL 5', 'Preclinical studies; IND or IMPD in preparation', 'D3'],
+      ['TRL 6', 'IND or IMPD approved; Phase 1 running or done', 'D4'],
+      ['TRL 7', 'Phase 2 completed; Phase 3 planned or running', 'D4']
+    ];
+    this.BANDS = { D1: 'Discovery', D2: 'Lead and candidate', D3: 'IND/CTA-enabling', D4: 'Clinical' };
+    this.MODS = [['Small molecule', 'SM'], ['Antibody', 'BI'], ['Antibody-drug conjugate', 'BI'], ['Other protein or peptide', 'BI'], ['Cell therapy', 'CT'], ['Gene therapy', 'GT'], ['Gene editing', 'GT'], ['RNA (siRNA, ASO)', 'RN'], ['mRNA', 'RN'], ['Vaccine', null], ['Radiopharmaceutical', null], ['Microbiome', null]];
+    this.MODNAMES = { SM: 'Small molecule', BI: 'Biologics', CT: 'Cell therapy', GT: 'Gene therapy and editing', RN: 'RNA and oligonucleotides', PL: 'Platform' };
+    this.TYPES = ['Asset-centric', 'Platform with lead asset', 'Platform only'];
+    this.ROUNDS = ['Pre-seed', 'Seed', 'Series A', 'Series B', 'Series C+', 'Bridge'];
+    this.WEIGHTS = {
+      D1: [['Science', 30], ['Team', 25], ['Product', 10], ['IP', 10], ['Market', 10], ['Regulatory', 5], ['Financing', 5], ['Validation', 5], ['CMC', 0]],
+      D2: [['Science', 25], ['Team', 20], ['Product', 15], ['IP', 10], ['Market', 10], ['Regulatory', 5], ['CMC', 5], ['Financing', 5], ['Validation', 5]],
+      D3: [['Science', 20], ['Team', 15], ['Product', 15], ['IP', 15], ['Regulatory', 10], ['CMC', 10], ['Market', 5], ['Financing', 5], ['Validation', 5]],
+      D4: [['Science', 20], ['Team', 15], ['Regulatory', 15], ['Product', 10], ['IP', 10], ['CMC', 10], ['Market', 10], ['Financing', 5], ['Validation', 5]]
+    };
+    this.EXPECT = {
+      D1: ['Full-time founders and a clearly described unmet need', 'A first proof of concept in a defined model', 'A funded kill/go experiment for the next 12 months'],
+      D2: ['Key result reproduced outside your own lab', 'A Target Product Profile and one lead indication', 'IP owned by the company or exclusively licensed'],
+      D3: ['Freedom-to-operate analysis and a PCT or granted patent', 'A pre-IND or scientific-advice meeting', 'A CDMO and a plan for GMP material'],
+      D4: ['Registered trials with human safety data', 'Expedited designations where eligible', 'A pricing hypothesis and a COGS estimate']
+    };
+    this.M = [["TM01","core","RRRR",1],["TM02","core","RRRR",1],["TM03","core","ORRR",1],["TM04","core","ORRR",1],["TM05","core","ORRR",1],["TM06","core","ORRR",1],["TM07","core","-ORR",1],["SC01","core","RRRR",1],["SC02","core","RRRR",1],["SC03","core","ORRR",1],["SC04","core","ORRR",1],["SC05","core","ORRR",1],["SC06","core","OORR",1],["SC07","core","RRRR",1],["SC08","core","RRRR",1],["PD01","core","RRRR",1],["PD02","core","ORRR",1],["PD03","core","-ORR",1],["PD04","core","RRRR",1],["PD05","core","RRRR",1],["IP01","core","RRRR",1],["IP02","core","RRRR",1],["IP03","core","-ORR",1],["IP04","core","-ORR",1],["IP05","core","OOOO",1],["RC01","core","ORRR",1],["RC02","core","-ORR",1],["RC03","core","OOOO",1],["RC04","core","-ORR",1],["RC05","core","---R",1],["CM01","core","-RRR",1],["CM02","core","--RR",1],["CM03","core","-OOR",1],["CM04","core","-OOO",1],["MK01","core","RRRR",1],["MK02","core","RRRR",1],["MK03","core","RRRR",1],["MK04","core","ORRR",1],["MK05","core","--OR",1],["FN01","core","RRRR",1],["FN02","core","RRRR",1],["FN03","core","OOOO",1],["EV01","core","OOOO",1],["EV02","core","OOOO",1],["EV03","core","OOOO",1],["EV04","core","OOOO",1],["SM01","SM","ORRR",1],["SM02","SM","ORRR",1],["SM03","SM","ORRR",1],["SM04","SM","-ORR",1],["BI01","BI","RRRR",0],["BI02","BI","ORRR",1],["BI03","BI","-ORR",1],["BI04","BI","ORRR",1],["CT01","CT","RRRR",0],["CT02","CT","ORRR",1],["CT03","CT","ORRR",1],["CT04","CT","-ORR",1],["GT01","GT","RRRR",0],["GT02","GT","ORRR",1],["GT03","GT","ORRR",1],["GT04","GT","ORRR",1],["RN01","RN","RRRR",1],["RN02","RN","ORRR",1],["RN03","RN","ORRR",1],["PL01","PL","RRRR",1],["PL02","PL","OOOO",1],["PL03","PL","RRRR",0],["PL04","PL","RRRR",1]];
+    this.state = { trl: 2, mods: ['Small molecule'], type: 'Asset-centric', round: 'Seed' };
+  }
+
+  renderVals() {
+    var self = this;
+    var accent = this.props.accent ?? '#0D6B5E';
+    var band = this.TRL[this.state.trl][2];
+    var bi = ['D1', 'D2', 'D3', 'D4'].indexOf(band);
+    var active = {};
+    this.state.mods.forEach(function (m) {
+      var hit = self.MODS.find(function (x) { return x[0] === m; });
+      if (hit && hit[1]) active[hit[1]] = true;
+    });
+    if (this.state.type !== 'Asset-centric') active.PL = true;
+    var visible = this.M.filter(function (r) { return (r[1] === 'core' || active[r[1]]) && r[2].charAt(bi) !== '-'; });
+    var scored = visible.filter(function (r) { return r[3] === 1; });
+    var required = scored.filter(function (r) { return r[2].charAt(bi) === 'R'; }).length;
+    var optional = scored.length - required;
+    var minutes = Math.max(15, Math.round(scored.length / 5) * 5);
+    var top = this.WEIGHTS[band].slice(0, 3).map(function (w) { return w[0] + ' ' + w[1]; }).join(' · ') + ' of 100 points';
+    var r = this.state.round;
+    var unusual = (r === 'Series A' && bi === 0) || ((r === 'Series B' || r === 'Series C+') && bi <= 1);
+    return {
+      accent: accent,
+      trls: this.TRL.map(function (t, i) {
+        var sel = self.state.trl === i;
+        return { trl: t[0], text: t[1], band: t[2] + ' · ' + self.BANDS[t[2]], selected: sel, unselected: !sel, pick: function () { self.setState({ trl: i }); } };
+      }),
+      mods: this.MODS.map(function (m) {
+        var sel = self.state.mods.indexOf(m[0]) >= 0;
+        return {
+          label: m[0], selected: sel, unselected: !sel,
+          toggle: function () {
+            var cur = self.state.mods;
+            self.setState({ mods: cur.indexOf(m[0]) >= 0 ? cur.filter(function (x) { return x !== m[0]; }) : cur.concat([m[0]]) });
+          }
+        };
+      }),
+      types: this.TYPES.map(function (t) { var sel = self.state.type === t; return { label: t, selected: sel, unselected: !sel, pick: function () { self.setState({ type: t }); } }; }),
+      rounds: this.ROUNDS.map(function (t) { var sel = self.state.round === t; return { label: t, selected: sel, unselected: !sel, pick: function () { self.setState({ round: t }); } }; }),
+      bandTitle: band + ' · ' + this.BANDS[band],
+      bandTrl: this.TRL[this.state.trl][0] + ' – ' + this.TRL[this.state.trl][1],
+      scored: scored.length, required: required, optional: optional, minutes: minutes + ' min',
+      modules: Object.keys(active).map(function (k) { return { label: self.MODNAMES[k] }; }),
+      noModules: Object.keys(active).length === 0,
+      topWeights: top,
+      cgt: !!(active.CT || active.GT),
+      expect: this.EXPECT[band].map(function (t) { return { text: t }; }),
+      unusualRound: unusual,
+      roundWarning: r + ' is unusual for ' + band + '. You can continue; the CV will ask you to confirm it.'
+    };
+  }
+}
+
+return Component;
+})(DCLogic);
+COMPONENTS["Main"] = (function (DCLogic) {
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.DIMS = [
+      { id: 'TM', name: 'Team', w: 20, note: 'Who turns the science into a medicine. Investors read drug-development experience as a proxy for judgment.' },
+      { id: 'SC', name: 'Science and evidence', w: 25, note: 'Scored on the 5R logic: right target, right tissue, right safety, right patient. Name evidence types only, never data.' },
+      { id: 'PD', name: 'Product and plan', w: 15, note: 'Focus, a Target Product Profile and a funded plan to the next value-inflection point.' },
+      { id: 'IP', name: 'IP and exclusivity', w: 10, note: 'Status and ownership only. Never paste claims or unpublished applications.' },
+      { id: 'RC', name: 'Regulatory and clinical', w: 5, note: 'How you get to the clinic: pathway, agency contact, first-in-human plan.' },
+      { id: 'CM', name: 'CMC', w: 5, note: 'How the drug will be made at the quality and scale the next phase needs.' },
+      { id: 'MK', name: 'Market', w: 10, note: 'Who needs the drug, what patients get today, and who else is coming.' },
+      { id: 'FN', name: 'Financing', w: 5, note: 'What this round buys and how long it lasts.' },
+      { id: 'EV', name: 'External validation', w: 5, note: 'Third-party signals. One strong signal earns the full score.' }
+    ];
+    this.PROOF = { link: 'Public link', names: 'Advisor names (public)', patent: 'Patent publication number', doi: 'DOI', grant: 'Grant ID or award page', trial: 'Trial registry ID' };
+    this.Q = [{"id":"TM01","d":"TM","r":"R","c":"Commitment","t":"How many founders or executives work full-time for the company?","o":[["None yet",0],["One",0.6],["Two or more",1]]},{"id":"TM02","d":"TM","r":"R","c":"Drug-development judgment","t":"What is the deepest drug-development experience in your leadership team?","o":[["None",0],["Academic translational research only",0.3],["Advisor with industry R&D experience",0.5],["Executive with industry R&D experience",0.8],["Executive who has taken an asset into the clinic",1]]},{"id":"TM03","d":"TM","r":"R","c":"Track record","t":"Has anyone in the founding team built a company before?","na":1,"o":[["No",0],["Yes, a VC-backed company",0.6],["Yes, with an exit or licensing deal",1,"link"]]},{"id":"TM04","d":"TM","r":"R","c":"Leadership","t":"Who leads the company today?","o":[["Scientific founder, first operating role",0.4],["Founder with a prior operating role",0.7],["Experienced biotech CEO",1]]},{"id":"TM05","d":"TM","r":"R","c":"Hiring plan","t":"Do you have a hiring plan for key gaps (e.g. CMO, CMC lead, CFO, BD)?","o":[["No plan yet",0],["Gaps named",0.5],["Gaps named with timing, funded by this round",1]]},{"id":"TM06","d":"TM","r":"R","c":"Advisors","t":"Who advises you scientifically and clinically?","o":[["No advisors yet",0],["Informal advisors",0.4],["Named advisory board with at least two KOLs in the indication",1,"names"]]},{"id":"TM07","d":"TM","r":"O","c":"Board","t":"How is your board composed?","o":[["Founders only",0.3],["Includes an investor director",0.7],["Includes an independent industry director",1]]},{"id":"SC01","d":"SC","r":"R","c":"Target confidence","t":"What is the strongest evidence that your target drives the disease?","h":"Name the type of evidence only – no data.","o":[["Literature hypothesis",0.2],["Functional validation in vitro",0.4],["Validation in an in-vivo disease model",0.6],["Human genetic evidence",0.9],["Clinical validation of the mechanism",1]]},{"id":"SC02","d":"SC","r":"R","c":"Evidence package","t":"Which evidence do you have today? Tick all that apply.","h":"Scored against what investors expect at D2; each extra item adds 0.05.","y":"checklist","i":[["ivpoc","In-vitro proof of concept"],["te","Target engagement shown"],["ive","In-vivo efficacy in a disease-relevant model"],["pkpd","PK/PD or dose-response relationship"],["ngtox","Early (non-GLP) safety or tolerability data"],["gtox","GLP toxicology completed"],["hsafe","Human safety data","trial"],["heff","Human efficacy signal","trial"]],"e":["ivpoc","te","ive","pkpd"]},{"id":"SC03","d":"SC","r":"R","c":"Reproducibility","t":"Has your key result been reproduced?","o":[["Single lab, single series of experiments",0.2],["Reproduced in-house in independent experiments",0.5],["Reproduced by a CRO or a second academic lab",0.9],["Reproduced by a pharma partner",1]]},{"id":"SC04","d":"SC","r":"R","c":"Exposure at site of action","t":"Have you shown exposure at the site of action?","o":[["Not yet assessed",0],["Predicted by modelling",0.4],["Measured in animals",0.8],["Measured in humans",1]]},{"id":"SC05","d":"SC","r":"R","c":"Safety liabilities","t":"How have you assessed safety liabilities?","o":[["Not yet assessed",0],["Literature and target-biology review",0.4],["Experimental screen (off-target panel or early tox)",0.8],["GLP toxicology complete",1]]},{"id":"SC06","d":"SC","r":"O","c":"Patient selection","t":"How will you select the right patients?","o":[["No strategy yet",0],["Hypothesis",0.4],["Biomarker identified",0.7],["Biomarker assay or companion diagnostic plan",1]]},{"id":"SC07","d":"SC","r":"R","c":"Differentiation","t":"How is your product positioned against the standard of care?","h":"Add three differentiation points (max 120 characters each). Say what it does, not how.","s":"withBullets","na":1,"o":[["First-in-class",1],["Best-in-class with a stated advantage",0.9],["Repurposing with new IP",0.6],["Fast follower",0.5]]},{"id":"SC08","d":"SC","r":"R","c":"Kill/go experiment","t":"Is your next kill/go experiment defined?","o":[["Not defined",0],["Defined",0.6],["Defined, funded and scheduled within 12 months",1]]},{"id":"SM02","d":"SC","r":"R","c":"ADME/DMPK","m":1,"t":"What ADME / DMPK data do you have?","o":[["Not started",0],["In-vitro ADME",0.5],["In-vivo PK in two or more species",1]]},{"id":"SM03","d":"SC","r":"R","c":"Selectivity","m":1,"t":"How have you profiled selectivity?","o":[["Not yet",0],["Focused panel",0.5],["Broad safety panel",1]]},{"id":"PD01","d":"PD","r":"R","c":"Focus","t":"How focused is your lead indication?","o":[["Several candidates, undecided",0.3],["Lead indication chosen",0.7],["Lead chosen, follow-on indications mapped",1]]},{"id":"PD02","d":"PD","r":"R","c":"Target Product Profile","t":"Do you have a Target Product Profile (TPP)?","o":[["No",0],["Draft",0.5],["Written and reviewed with clinicians or advisors",1]]},{"id":"PD03","d":"PD","r":"O","c":"Pipeline depth","t":"How deep is your pipeline?","o":[["Single program",0.5],["Lead plus backup candidate",0.8],["Lead, backup and a second program",1]]},{"id":"PD04","d":"PD","r":"R","c":"Milestone plan","t":"What is your plan to the next value-inflection point?","o":[["No plan yet",0],["Milestones listed",0.5],["Milestones with dates and budget, funded by this round",1]]},{"id":"PD05","d":"PD","r":"R","c":"Time to inflection","t":"How many months to your next value-inflection point?","y":"number","na":1,"b":[[24,1],[36,0.7],[9999,0.4]]},{"id":"SM01","d":"PD","r":"R","c":"Chemical matter stage","m":1,"t":"What stage is your chemical matter?","o":[["Hit series",0.3],["Lead series",0.6],["Development candidate nominated",1]]},{"id":"IP01","d":"IP","r":"R","c":"Filing","t":"What is the most advanced IP filing for your lead program?","h":"Status only – never paste claims or unpublished applications.","o":[["None yet",0],["Invention disclosed to the tech-transfer office",0.2],["Priority application filed",0.5],["PCT application filed",0.75],["Patent granted in a major market",1,"patent"]]},{"id":"IP02","d":"IP","r":"R","c":"Ownership","t":"Who owns the core IP?","o":[["University or institute, no agreement yet",0.2],["Option agreement signed",0.5],["Licence terms agreed",0.7],["Exclusive licence signed",0.9],["Company-owned",1]]},{"id":"IP03","d":"IP","r":"O","c":"Freedom to operate","t":"Has freedom to operate been assessed?","o":[["Not assessed",0],["Informal landscape search",0.4],["Professional FTO analysis in progress",0.7],["Professional FTO opinion completed",1]]},{"id":"IP04","d":"IP","r":"O","c":"Exclusivity horizon","t":"How many years of protection remain after expected launch?","o":[["Unknown",0],["Under 5 years",0.3],["5–10 years",0.7],["Over 10 years",1]]},{"id":"IP05","d":"IP","r":"O","c":"Other exclusivity","t":"Which additional exclusivity applies? Tick all that apply.","y":"multi","o":[["Orphan exclusivity likely",0.7],["Regulatory data exclusivity",0.5],["Process know-how or trade secrets",0.5]]},{"id":"RC01","d":"RC","r":"R","c":"Regulatory pathway","t":"How defined is your regulatory pathway?","o":[["Not yet defined",0],["Target agencies named",0.5],["Pathway and key requirements mapped",1]]},{"id":"RC02","d":"RC","r":"O","c":"Agency interaction","t":"Have you interacted with a regulator?","o":[["No",0],["Meeting planned with a date",0.4],["INTERACT, pre-IND or scientific advice held",1]]},{"id":"RC03","d":"RC","r":"O","c":"Expedited designations","t":"Which status do your expedited designations have (orphan, fast track, breakthrough, RMAT, PRIME)?","o":[["None",0],["Planned",0.3],["Applied",0.5],["Granted",1,"link"]]},{"id":"RC04","d":"RC","r":"O","c":"First-in-human plan","t":"How developed is your first-in-human plan?","o":[["Not started",0],["Outline: population and endpoints",0.5],["Protocol synopsis with CRO or sites identified",1]]},{"id":"CM01","d":"CM","r":"R","c":"Manufacturing route","t":"How will you manufacture?","o":[["Not defined",0],["Research-grade material only",0.3],["CDMO identified",0.6],["CDMO contracted or own GMP capability",1]]},{"id":"CM03","d":"CM","r":"O","c":"Cost of goods","t":"Have you estimated cost of goods at commercial scale?","o":[["Not assessed",0],["Qualitative view",0.5],["COGS estimate",1]]},{"id":"CM04","d":"CM","r":"O","c":"Supply risk","t":"Have you assessed critical supply risks?","o":[["Not assessed",0],["Identified",0.5],["Mitigated (second source or reserved capacity)",1]]},{"id":"SM04","d":"CM","r":"O","c":"Synthesis scale-up","m":1,"t":"What is your synthesis scale-up status?","o":[["Not assessed",0],["Route identified",0.5],["Multi-gram or kilogram scale achieved",1]]},{"id":"MK01","d":"MK","r":"R","c":"Patient population","t":"How have you sized the patient population for your lead indication?","o":[["Not sized",0],["Estimate without a source",0.4],["Sourced epidemiology",0.8,"link"],["Sourced epidemiology plus price analogues",1,"link"]]},{"id":"MK02","d":"MK","r":"R","c":"Standard of care","t":"Have you described the current standard of care and its limitations?","o":[["No",0],["Yes",1]]},{"id":"MK03","d":"MK","r":"R","c":"Competition","t":"How have you mapped the competition?","o":[["Not mapped",0],["Competitors named",0.5],["Competing programs mapped by mechanism and stage, with positioning",1]]},{"id":"MK04","d":"MK","r":"R","c":"Partnering thesis","t":"What is your partnering or exit thesis?","o":[["None yet",0],["Thesis stated",0.5],["Thesis with at least two comparable deals",1,"link"]]},{"id":"FN01","d":"FN","r":"R","c":"Use of funds","t":"How are the funds from this round allocated?","o":[["Not specified",0],["Budget categories",0.4],["Milestones with budget",1]]},{"id":"FN02","d":"FN","r":"R","c":"Runway","t":"What runway will you have after this round closes?","o":[["Under 12 months",0.3],["12–18 months",0.7],["Over 18 months",1]]},{"id":"FN03","d":"FN","r":"O","c":"Committed capital","t":"How much of the round is already committed?","o":[["None",0.3],["Under 25%",0.6],["25% or more, or a lead is secured",1]]},{"id":"EV01","d":"EV","r":"O","c":"Publications","t":"Is your core science published?","o":[["No",0],["Preprint",0.6,"doi"],["Peer-reviewed paper",1,"doi"]]},{"id":"EV02","d":"EV","r":"O","c":"Non-dilutive funding","t":"Have you received non-dilutive funding?","o":[["None",0],["Applied",0.3],["Awarded (e.g. EIC, GO-Bio, EXIST, NIH SBIR, BARDA)",1,"grant"]]},{"id":"EV03","d":"EV","r":"O","c":"Industry validation","t":"Do you collaborate with industry?","o":[["No",0],["Research collaboration or MTA with pharma",0.7],["Paid partnership or option deal",1,"link"]]},{"id":"EV04","d":"EV","r":"O","c":"Accelerators","t":"Have you been selected by an accelerator or won a competition?","o":[["No",0],["Yes",0.8,"link"]]}];
+    this.state = {
+      section: 'SC',
+      confirmed: {},
+      answers: {"TM01":{"option":2},"TM02":{"option":3},"TM03":{"option":0},"TM04":{"option":1},"TM05":{"option":1},"TM06":{"option":2,"proof":"Prof. A. Example (neuro-oncology); Dr. B. Example (CNS drug discovery)"},"TM07":{"option":0},"SC01":{"option":2},"SC02":{"items":["ivpoc","te","ive"]},"SC03":{"option":1},"SC04":{"option":2},"SC05":{"option":1},"SC06":{"option":1},"SC07":{"option":1,"bullets":["Brain exposure at an efficacious dose in mice","Oral once-daily dosing","Selective over related enzymes"]},"SC08":{"option":1},"SM01":{"option":1},"SM02":{"option":1},"SM03":{"option":1},"SM04":{"option":1},"PD01":{"option":1},"PD03":{"option":1},"PD04":{"option":1},"PD05":{"value":"18"},"IP01":{"option":2},"IP02":{"option":1},"IP03":{"option":1},"RC01":{"option":1},"RC02":{"option":0},"RC03":{"option":0},"CM01":{"option":2},"MK01":{"option":2},"MK02":{"option":1},"MK03":{"option":1},"FN01":{"option":1},"FN02":{"option":1},"FN03":{"option":0},"EV01":{"option":1,"proof":"10.1101/2026.01.01.000000"},"EV02":{"option":1},"EV03":{"option":0},"EV04":{"option":0}}
+    };
+  }
+
+  pts(q, a) {
+    if (!a) return { answered: false, p: 0, capped: false };
+    if (q.y === 'checklist') {
+      var items = a.items || [];
+      var proofs = a.proofs || {};
+      var counted = items.filter(function (k) {
+        var it = q.i.find(function (x) { return x[0] === k; });
+        return it && (!it[2] || (proofs[k] && String(proofs[k]).trim()));
+      });
+      var hits = counted.filter(function (k) { return q.e.indexOf(k) >= 0; }).length;
+      return { answered: items.length > 0, p: Math.min(1, hits / q.e.length + 0.05 * (counted.length - hits)), capped: counted.length < items.length };
+    }
+    if (q.y === 'number') {
+      if (a.value === undefined || a.value === null || String(a.value).trim() === '') return { answered: false, p: 0, capped: false };
+      var v = Number(a.value);
+      var bin = q.b.find(function (b) { return v <= b[0]; });
+      return { answered: true, p: bin ? bin[1] : 0, capped: false };
+    }
+    if (q.y === 'multi') {
+      var sel = a.options || [];
+      if (!sel.length) return { answered: false, p: 0, capped: false };
+      return { answered: true, p: Math.max.apply(null, sel.map(function (i) { return q.o[i][1]; })), capped: false };
+    }
+    if (a.option === undefined || a.option === null) return { answered: false, p: 0, capped: false };
+    var o = q.o[a.option];
+    var p = o[1];
+    var capped = false;
+    if (o[2] && !(a.proof && String(a.proof).trim())) {
+      var lower = q.o.filter(function (x) { return x[1] < o[1] && !x[2]; }).map(function (x) { return x[1]; });
+      p = lower.length ? Math.max.apply(null, lower) : 0;
+      capped = true;
+    }
+    if (q.s === 'withBullets') {
+      var n = (a.bullets || []).filter(function (b) { return b && String(b).trim(); }).length;
+      if (n < 3) { p = p * 0.7; capped = true; }
+    }
+    return { answered: true, p: p, capped: capped };
+  }
+
+  score(ans) {
+    var self = this;
+    var dims = {};
+    var total = 0;
+    var mean = function (a) { return a.length ? a.reduce(function (s, x) { return s + x; }, 0) / a.length : 0; };
+    this.DIMS.forEach(function (d) {
+      var qs = self.Q.filter(function (q) { return q.d === d.id; });
+      var R = qs.filter(function (q) { return q.r === 'R'; });
+      var O = qs.filter(function (q) { return q.r === 'O'; });
+      var pv = function (q) { return self.pts(q, ans[q.id]).p; };
+      var s;
+      if (d.id === 'EV' || !R.length) s = O.length ? Math.max.apply(null, O.map(pv)) : 0;
+      else s = Math.min(1, mean(R.map(pv)) + 0.1 * mean(O.map(pv)));
+      dims[d.id] = s;
+      total += d.w * s;
+    });
+    return { total: total, dims: dims };
+  }
+
+  flagsFor(ans) {
+    var label = function (Q, id) { var q = Q.find(function (x) { return x.id === id; }); var a = ans[id]; return a && a.option !== undefined && a.option !== null ? q.o[a.option][0] : null; };
+    var out = [];
+    if (ans.PD05 && String(ans.PD05.value).trim() !== '' && Number(ans.PD05.value) < 6) out.push({ id: 'F5', kind: 'warning', text: 'A value-inflection point within 6 months is unusual.' });
+    if (label(this.Q, 'FN02') === 'Under 12 months') out.push({ id: 'F6', kind: 'warning', text: 'Runway under 12 months after close.' });
+    if (label(this.Q, 'RC01') === 'Not yet defined') out.push({ id: 'F10', kind: 'warning', text: 'Investors expect a regulatory pathway from D2.' });
+    if (label(this.Q, 'SC03') === 'Single lab, single series of experiments') out.push({ id: 'F8', kind: 'open', text: 'Shown to VCs: key result not yet reproduced independently.' });
+    if (label(this.Q, 'TM02') === 'None' && label(this.Q, 'TM06') === 'No advisors yet') out.push({ id: 'F9', kind: 'open', text: 'Shown to VCs: no drug-development experience on team or board.' });
+    return out;
+  }
+
+  proofStatus(type, value) {
+    var v = String(value || '').trim();
+    if (!v) return { state: 'missing', text: 'Missing – this answer scores like the level below' };
+    if (type === 'doi') return /^10\.\d{4,9}\/\S+$/.test(v) ? { state: 'verified', text: 'Verified via Crossref' } : { state: 'linked', text: 'Not a valid DOI yet – counted as a link' };
+    if (type === 'patent') return /^(EP|WO|US|DE|GB|JP|CN)\s?\d/i.test(v) ? { state: 'verified', text: 'Checked via EPO Open Patent Services' } : { state: 'linked', text: 'Not a publication number yet – counted as a link' };
+    if (type === 'trial') return /^NCT\d{8}$/i.test(v) ? { state: 'verified', text: 'Checked via ClinicalTrials.gov' } : { state: 'linked', text: 'Counted as a link until verified' };
+    if (type === 'names') return { state: 'linked', text: 'Shown on your profile' };
+    return { state: 'linked', text: 'Link stored – spot-checked by the BioMatch team' };
+  }
+
+  setAnswer(id, patch) {
+    var answers = Object.assign({}, this.state.answers);
+    answers[id] = Object.assign({}, answers[id] || {}, patch);
+    this.setState({ answers: answers });
+  }
+
+  renderVals() {
+    var self = this;
+    var accent = this.props.accent ?? '#0D6B5E';
+    var ans = this.state.answers;
+    var base = this.score(ans);
+    var fmt = function (x) { return (Math.round(x * 100) / 100).toString(); };
+    var one = function (x) { return (Math.round(x * 10) / 10).toFixed(1); };
+
+    var answered = 0;
+    var requiredOpen = 0;
+    this.Q.forEach(function (q) {
+      var r = self.pts(q, ans[q.id]);
+      if (r.answered) answered++;
+      else if (q.r === 'R') requiredOpen++;
+    });
+
+    var flags = this.flagsFor(ans).map(function (f) {
+      var confirmed = !!self.state.confirmed[f.id];
+      return {
+        id: f.id, text: f.text, isWarning: f.kind === 'warning', isOpen: f.kind === 'open',
+        confirmed: confirmed, unconfirmed: f.kind === 'warning' && !confirmed,
+        confirm: function () { var c = Object.assign({}, self.state.confirmed); c[f.id] = true; self.setState({ confirmed: c }); }
+      };
+    });
+    var unconfirmed = flags.filter(function (f) { return f.unconfirmed; }).length;
+    var tm01 = ans.TM01 && ans.TM01.option;
+    var gateList = [
+      { label: 'Non-confidential deck checked', pass: true },
+      { label: 'At least one full-time founder', pass: tm01 !== undefined && tm01 !== null && tm01 >= 1 },
+      { label: requiredOpen ? requiredOpen + ' required ' + (requiredOpen === 1 ? 'answer' : 'answers') + ' open' : 'All required answers given', pass: requiredOpen === 0 },
+      { label: unconfirmed ? unconfirmed + ' warning to confirm' : 'No open warnings', pass: unconfirmed === 0 },
+      { label: 'Updated within 6 months', pass: true }
+    ].map(function (g) { return { label: g.label, pass: g.pass, fail: !g.pass }; });
+    var gatesOk = gateList.every(function (g) { return g.pass; });
+    var total = Math.round(base.total * 10) / 10;
+    var listed = gatesOk && total >= 60;
+    var level = !listed ? 'Draft' : total >= 90 ? 'Top profile' : total >= 75 ? 'Investor-ready' : 'Listed';
+    var statusText = listed
+      ? (level === 'Listed' ? 'Visible to verified investors. ' + one(75 - total) + ' points to Investor-ready.' : 'Visible to verified investors.')
+      : (!gatesOk ? (requiredOpen ? 'Answer the open required questions to be listed.' : 'Clear the open checks to be listed.') : one(60 - total) + ' points to listing.');
+
+    var cands = [];
+    this.Q.forEach(function (q) {
+      var a = ans[q.id];
+      var r = self.pts(q, a);
+      var best = q.o ? q.o.reduce(function (b, o, i, arr) { return o[1] > arr[b][1] ? i : b; }, 0) : 0;
+      var push = function (kind, next, text, upTo) {
+        var trial = Object.assign({}, ans);
+        trial[q.id] = next;
+        var gain = self.score(trial).total - base.total;
+        if (gain > 0.05) cands.push({ kind: kind, text: text, gain: gain, upTo: upTo, dim: q.d });
+      };
+      if (q.y === 'checklist') {
+        var have = (a && a.items) || [];
+        q.e.forEach(function (k) {
+          if (have.indexOf(k) < 0) {
+            var it = q.i.find(function (x) { return x[0] === k; });
+            push('milestone', { items: have.concat([k]), proofs: (a && a.proofs) || {} }, 'Evidence: ' + it[1].toLowerCase(), false);
+          }
+        });
+      } else if (q.y === 'number') {
+        if (!r.answered) push('quick', { value: '12' }, 'Answer: ' + q.c.toLowerCase(), true);
+      } else if (q.y === 'multi') {
+        if (!r.answered) push('quick', { options: [best] }, 'Answer: ' + q.c.toLowerCase(), true);
+      } else if (!r.answered) {
+        push('quick', { option: best, proof: 'x', bullets: ['a', 'b', 'c'] }, 'Answer: ' + q.c, true);
+      } else if (r.capped) {
+        var o = q.o[a.option];
+        push('quick', Object.assign({}, a, { proof: 'x', bullets: ['a', 'b', 'c'] }), o[2] ? 'Add ' + self.PROOF[o[2]].toLowerCase() + ': ' + q.c.toLowerCase() : 'Add three differentiation points', false);
+      } else if (!q.na) {
+        var cur = q.o[a.option][1];
+        var higher = q.o.map(function (o, i) { return { o: o, i: i }; }).filter(function (x) { return x.o[1] > cur; }).sort(function (x, y) { return x.o[1] - y.o[1]; });
+        if (higher.length) push('milestone', { option: higher[0].i, proof: 'x' }, q.c + ': ' + higher[0].o[0].charAt(0).toLowerCase() + higher[0].o[0].slice(1), false);
+      }
+    });
+    cands.sort(function (x, y) { return y.gain - x.gain || (x.kind === 'quick' ? -1 : 1); });
+    var actions = cands.slice(0, 3).map(function (c) {
+      return {
+        text: c.text, gain: (c.upTo ? 'up to +' : '+') + one(c.gain),
+        isQuick: c.kind === 'quick', isMilestone: c.kind === 'milestone',
+        go: function () { self.setState({ section: c.dim }); }
+      };
+    });
+
+    var ev = { verified: 0, linked: 0, missing: 0 };
+    this.Q.forEach(function (q) {
+      var a = ans[q.id];
+      if (!a || !q.o || a.option === undefined || a.option === null) return;
+      var o = q.o[a.option];
+      if (!o[2]) return;
+      ev[self.proofStatus(o[2], a.proof).state]++;
+    });
+
+    var nav = this.DIMS.map(function (d) {
+      var qs = self.Q.filter(function (q) { return q.d === d.id; });
+      var done = qs.filter(function (q) { return self.pts(q, ans[q.id]).answered; }).length;
+      var openReq = qs.filter(function (q) { return q.r === 'R' && !self.pts(q, ans[q.id]).answered; }).length;
+      var active = self.state.section === d.id;
+      return {
+        name: d.name, count: done + '/' + qs.length, active: active, inactive: !active,
+        hasOpen: openReq > 0, openText: openReq + ' required open',
+        go: function () { self.setState({ section: d.id }); }
+      };
+    });
+
+    var bars = this.DIMS.map(function (d) {
+      var s = base.dims[d.id];
+      return { name: d.name, pts: one(d.w * s), w: d.w, pct: Math.round(s * 100) };
+    });
+
+    var cur = this.DIMS.find(function (d) { return d.id === self.state.section; });
+    var qs = this.Q.filter(function (q) { return q.d === cur.id; }).map(function (q) {
+      var a = ans[q.id] || {};
+      var r = self.pts(q, ans[q.id]);
+      var isChecklist = q.y === 'checklist';
+      var isNumber = q.y === 'number';
+      var isMulti = q.y === 'multi';
+      var isSingle = !isChecklist && !isNumber;
+      var options = (q.o || []).map(function (o, i) {
+        var selected = isMulti ? (a.options || []).indexOf(i) >= 0 : a.option === i;
+        return {
+          label: o[0], pts: fmt(o[1]), selected: selected, unselected: !selected,
+          pick: function () {
+            if (isMulti) {
+              var cur2 = (self.state.answers[q.id] && self.state.answers[q.id].options) || [];
+              var next = cur2.indexOf(i) >= 0 ? cur2.filter(function (x) { return x !== i; }) : cur2.concat([i]);
+              self.setAnswer(q.id, { options: next });
+            } else self.setAnswer(q.id, { option: i });
+          }
+        };
+      });
+      var items = (q.i || []).map(function (it) {
+        var checked = (a.items || []).indexOf(it[0]) >= 0;
+        var expected = q.e && q.e.indexOf(it[0]) >= 0;
+        return {
+          label: it[1], checked: checked, unchecked: !checked,
+          tag: expected ? 'Expected at D2' : (it[2] ? 'Extra · needs a trial ID' : 'Extra · +0.05'),
+          toggle: function () {
+            var curItems = (self.state.answers[q.id] && self.state.answers[q.id].items) || [];
+            var next = curItems.indexOf(it[0]) >= 0 ? curItems.filter(function (x) { return x !== it[0]; }) : curItems.concat([it[0]]);
+            self.setAnswer(q.id, { items: next });
+          }
+        };
+      });
+      var sel = isSingle && !isMulti && a.option !== undefined && a.option !== null ? q.o[a.option] : null;
+      var proofType = sel && sel[2] ? sel[2] : null;
+      var ps = proofType ? self.proofStatus(proofType, a.proof) : null;
+      var bullets = q.s === 'withBullets' ? [0, 1, 2].map(function (n) {
+        return {
+          n: 'Point ' + (n + 1), value: (a.bullets && a.bullets[n]) || '',
+          onInput: function (e) { var b = ((self.state.answers[q.id] && self.state.answers[q.id].bullets) || ['', '', '']).slice(); b[n] = e.target.value.slice(0, 120); self.setAnswer(q.id, { bullets: b }); }
+        };
+      }) : [];
+      return {
+        id: q.id, prompt: q.t, help: q.h || '', hasHelp: !!q.h, isModule: !!q.m,
+        isRequired: q.r === 'R', isOptional: q.r === 'O',
+        isSingle: isSingle, isChecklist: isChecklist, isNumber: isNumber,
+        options: options, items: items,
+        numberValue: a.value === undefined ? '' : String(a.value),
+        onNumber: function (e) { self.setAnswer(q.id, { value: e.target.value.replace(/[^0-9]/g, '').slice(0, 3) }); },
+        hasProof: !!proofType, proofLabel: proofType ? self.PROOF[proofType] : '',
+        proofValue: a.proof || '',
+        onProof: function (e) { self.setAnswer(q.id, { proof: e.target.value.slice(0, 200) }); },
+        proofVerified: !!ps && ps.state === 'verified', proofLinked: !!ps && ps.state === 'linked', proofMissing: !!ps && ps.state === 'missing',
+        proofText: ps ? ps.text : '',
+        hasBullets: bullets.length > 0, bullets: bullets,
+        answered: r.answered, unanswered: !r.answered,
+        scoreText: r.answered ? 'Scores ' + fmt(r.p) + ' of 1' : 'Not answered yet'
+      };
+    });
+
+    var deg = Math.round(total * 3.6);
+    return {
+      accent: accent,
+      ring: 'background: conic-gradient(' + accent + ' 0deg ' + deg + 'deg, #E3E9E7 ' + deg + 'deg 360deg)',
+      score: one(total), level: level, statusText: statusText,
+      isListed: listed, isDraft: !listed,
+      answeredText: answered + ' of ' + this.Q.length + ' questions answered',
+      progressPct: Math.round(answered / this.Q.length * 100),
+      nav: nav, bars: bars, actions: actions,
+      gates: gateList, flags: flags, hasFlags: flags.length > 0,
+      evVerified: ev.verified, evLinked: ev.linked, evMissing: ev.missing,
+      section: cur.name, sectionNote: cur.note, sectionWeight: 'Weight at D2: ' + cur.w + ' of 100 points',
+      sectionPts: one(cur.w * base.dims[cur.id]) + ' / ' + cur.w,
+      questions: qs
+    };
+  }
+}
+
+return Component;
+})(DCLogic);
+COMPONENTS["Deck"] = (function (DCLogic) {
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { f1: false, f2: false, attested: false, download: false, version: 1 };
+  }
+
+  renderVals() {
+    var self = this;
+    var accent = this.props.accent ?? '#0D6B5E';
+    var s = this.state;
+    var open = (s.f1 ? 0 : 1) + (s.f2 ? 0 : 1);
+    var cleared = open === 0 && s.attested;
+    var slides = [
+      ['Non-confidential label on the title slide', true, ''],
+      ['Problem and unmet need', true, ''],
+      ['Solution – what it does, not how', true, ''],
+      ['Evidence summary', true, ''],
+      ['Pipeline and milestones', true, ''],
+      ['IP status', true, ''],
+      ['Regulatory path', false, 'Often missing in seed decks'],
+      ['Team and advisors', true, ''],
+      ['Market and competition', true, ''],
+      ['Comparable partnering or M&A deals', false, 'Partnering or acquisition is the likely exit'],
+      ['Ask and use of funds by milestone', true, ''],
+      ['No P&L or financial statements', true, '']
+    ];
+    return {
+      accent: accent,
+      fileName: s.version === 1 ? 'Nuvaris_NonConfidential_Deck_v1.pdf' : 'Nuvaris_NonConfidential_Deck_v' + s.version + '.pdf',
+      fileMeta: '14 slides · PDF · uploaded today',
+      scanSummary: open ? open + (open === 1 ? ' finding needs you' : ' findings need you') : 'No open findings',
+      f1Open: !s.f1, f1Done: s.f1, f2Open: !s.f2, f2Done: s.f2,
+      resolveF1: function () { self.setState({ f1: true, version: self.state.version + 1 }); },
+      resolveF2: function () { self.setState({ f2: true }); },
+      replace: function () { self.setState({ version: self.state.version + 1 }); },
+      attested: s.attested,
+      toggleAttest: function () { self.setState({ attested: !self.state.attested }); },
+      cleared: cleared, notCleared: !cleared,
+      blockText: open ? 'Resolve ' + (open === 1 ? 'the open finding' : 'both open findings') + (s.attested ? ' to clear the deck.' : ' and confirm the statement to clear the deck.') : 'Confirm the statement to clear the deck.',
+      slides: slides.map(function (x) { return { label: x[0], found: x[1], missing: !x[1], note: x[2], hasNote: !!x[2] }; }),
+      download: s.download, noDownload: !s.download,
+      toggleDownload: function () { self.setState({ download: !self.state.download }); }
+    };
+  }
+}
+
+return Component;
+})(DCLogic);
+COMPONENTS["Preview"] = (function (DCLogic) {
+
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#0D6B5E' };
+  }
+}
+
+return Component;
+})(DCLogic);
+function lookup(scope, path) {
+  path = path.trim();
+  if (path === 'true') return true;
+  if (path === 'false') return false;
+  if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+  return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, scope);
+}
+var WHOLE = /^\s*\{\{([^}]+)\}\}\s*$/;
+function interp(str, scope) {
+  return str.replace(/\{\{([^}]+)\}\}/g, function (_, p) { var v = lookup(scope, p); return v == null ? '' : String(v); });
+}
+function renderNodes(nodes, scope, parent) {
+  for (var i = 0; i < nodes.length; i++) renderNode(nodes[i], scope, parent);
+}
+function renderNode(node, scope, parent) {
+  if (node.nodeType === 3) { parent.appendChild(document.createTextNode(interp(node.nodeValue, scope))); return; }
+  if (node.nodeType !== 1) return;
+  var tag = node.localName;
+  if (tag === 'sc-if') {
+    var m = WHOLE.exec(node.getAttribute('value') || '');
+    if (m && lookup(scope, m[1])) renderNodes(node.childNodes, scope, parent);
+    return;
+  }
+  if (tag === 'sc-for') {
+    var lm = WHOLE.exec(node.getAttribute('list') || '');
+    var list = lm ? lookup(scope, lm[1]) : [];
+    var as = node.getAttribute('as') || 'item';
+    (list || []).forEach(function (item, idx) {
+      var s = Object.create(scope); s[as] = item; s.$index = idx;
+      renderNodes(node.childNodes, s, parent);
+    });
+    return;
+  }
+  var el = node.namespaceURI === 'http://www.w3.org/2000/svg'
+    ? document.createElementNS(node.namespaceURI, tag)
+    : document.createElement(tag);
+  for (var a = 0; a < node.attributes.length; a++) {
+    var name = node.attributes[a].name, val = node.attributes[a].value;
+    if (name.indexOf('hint-') === 0) continue;
+    var whole = WHOLE.exec(val);
+    if (name.indexOf('on') === 0 && whole) {
+      var fn = lookup(scope, whole[1]);
+      if (typeof fn === 'function') el.addEventListener(name.slice(2), fn);
+      continue;
+    }
+    if (whole && (name === 'checked' || name === 'value')) {
+      var v = lookup(scope, whole[1]);
+      if (name === 'checked') el.checked = !!v; else { el.setAttribute('value', v == null ? '' : v); el.value = v == null ? '' : v; }
+      continue;
+    }
+    if (name === 'href' && /\.dc\.html$/.test(val)) {
+      var target = val.replace('.dc.html', '');
+      el.setAttribute('href', '#' + target);
+      el.addEventListener('click', function (t) { return function (e) { e.preventDefault(); show(t); }; }(target));
+      continue;
+    }
+    el.setAttribute(name, val.indexOf('{{') >= 0 ? interp(val, scope) : val);
+  }
+  renderNodes((node.content || node).childNodes, scope, el);
+  parent.appendChild(el);
+}
+function show(id) {
+  if (!COMPONENTS[id]) return;
+  var inst = new COMPONENTS[id]({});
+  var tpl = document.getElementById('tpl-' + id).content;
+  var app = document.getElementById('app');
+  inst._render = function () {
+    var frag = document.createDocumentFragment();
+    renderNodes(tpl.childNodes, inst.renderVals(), frag);
+    app.replaceChildren(frag);
+  };
+  inst._render();
+  current = id;
+  document.querySelectorAll('#switcher button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.screen === id ? 'true' : 'false'); });
+  window.scrollTo(0, 0);
+  if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+}
+document.querySelectorAll('#switcher button').forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.screen); }); });
+show((location.hash || '#Main').slice(1) in COMPONENTS ? (location.hash || '#Main').slice(1) : 'Main');
+</script>
+</body>
+</html>

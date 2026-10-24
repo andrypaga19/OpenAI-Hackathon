@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SeriesBio</title>
+<meta name="description" content="The investor-readiness and syndication layer for early-stage biotech.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/bulb.png">
+<link rel="preload" as="image" href="assets/pill-cap.png">
+<link rel="preload" as="image" href="assets/pill-body.png">
+<style>
+  :root {
+    --bg: #000;
+    --fg: #fff;
+    --muted: rgba(255, 255, 255, 0.5);
+    --faint: rgba(255, 255, 255, 0.12);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* ---------- Atmosphere: grain + vignette ---------- */
+  .grain {
+    position: fixed; inset: -50%;
+    pointer-events: none; z-index: 50;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    animation: grain 1.2s steps(6) infinite;
+  }
+  @keyframes grain {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-3%, 2%); }
+    40% { transform: translate(2%, -4%); }
+    60% { transform: translate(-4%, -1%); }
+    80% { transform: translate(3%, 3%); }
+    100% { transform: translate(0, 0); }
+  }
+  .vignette {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 40;
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.85) 100%);
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 60;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 40px;
+  }
+  .logo {
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    text-decoration: none;
+  }
+
+  /* ---------- Split stage ---------- */
+  main {
+    position: relative;
+    height: 100vh; height: 100dvh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .divider {
+    position: absolute; left: 50%; top: 14%; bottom: 14%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.22), transparent);
+    transform-origin: center;
+    z-index: 2;
+  }
+
+  .side {
+    position: relative;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 3vh;
+    cursor: pointer;
+    outline: none;
+    transition: opacity .6s var(--ease), filter .6s var(--ease);
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Spotlight cone from above */
+  .side::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 38% 55% at 50% 52%, rgba(255,255,255,0.07), transparent 70%),
+      radial-gradient(ellipse 22% 70% at 50% -5%, rgba(255,255,255,0.08), transparent 70%);
+    opacity: .7;
+    transition: opacity .6s var(--ease);
+    pointer-events: none;
+  }
+  .side:hover::before, .side:focus-visible::before { opacity: 1; }
+  main:has(.side:hover) .side:not(:hover) { opacity: .45; filter: blur(1px); }
+
+  .label {
+    position: relative; z-index: 3;
+    text-align: center;
+  }
+  .label small {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  /* Plush, tufted-textile lettering in white (SVG filter #plush) */
+  .label h2 { line-height: 0; }
+  .label h2 svg {
+    display: block; margin: 0 auto;
+    height: clamp(78px, 10vw, 150px); width: auto;
+    overflow: visible;
+  }
+  .plush-text {
+    font-family: "Bagel Fat One", "Inter", sans-serif;
+    font-size: 150px;
+    fill: #f6f4f0;
+    filter: url(#plush);
+  }
+
+  .object {
+    position: relative; z-index: 3;
+    height: 56vh;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .7s var(--ease);
+  }
+  .side:hover .object { transform: scale(1.04); }
+
+  .floater { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .spin { position: relative; height: 100%; }
+
+  /* Floor shadow that breathes with the float */
+  .shadow {
+    position: absolute; left: 50%; bottom: -5vh;
+    width: 60%; height: 3vh;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.10), transparent 70%);
+    filter: blur(6px);
+    animation: shadow 6s ease-in-out infinite;
+  }
+
+  .cta {
+    position: relative; z-index: 3;
+    font-size: 13px;
+    color: var(--muted);
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: color .3s var(--ease), gap .3s var(--ease);
+  }
+  .cta::after { content: "→"; }
+  .side:hover .cta { color: var(--fg); gap: 12px; }
+
+  /* ---------- Bulb ---------- */
+  .bulb .floater { animation: float 6s ease-in-out infinite; }
+  .bulb .spin { height: 52vh; animation: sway 9s ease-in-out infinite; transform-origin: 50% 85%; }
+  .bulb img { height: 100%; display: block; position: relative; z-index: 2; }
+  /* ---------- Pill ---------- */
+  .pill .floater { animation: float 6s ease-in-out -3s infinite; }
+  .pill .spin {
+    height: 40vh; aspect-ratio: 620 / 485;
+    animation: tilt 10s ease-in-out infinite;
+    transform-origin: 50% 50%;
+  }
+  /* Cap and body share one canvas, split along the diagonal seam */
+  .pill .cap, .pill .body {
+    position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  }
+  .pill .cap { z-index: 2; transform-origin: 45% 45%; }
+  .pill .body { z-index: 1; }
+
+  /* ---------- Idle motion ---------- */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2.4vh); }
+  }
+  @keyframes shadow {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: .9; }
+    50% { transform: translateX(-50%) scale(.8); opacity: .5; }
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-7deg) rotateY(0deg); }
+    50% { transform: rotate(7deg) rotateY(18deg); }
+  }
+  @keyframes tilt {
+    0%, 100% { transform: rotate(5deg); }
+    50% { transform: rotate(-5deg); }
+  }
+
+  /* ---------- Intro: lights come up on a dark stage ----------
+     Keyframes only define `from`, so each property settles on its normal
+     value and hover/click styles keep working afterwards. */
+  .side::before { animation: lightsUp 1.6s ease-out .2s backwards; }
+  .pill::before { animation-delay: .45s; }
+  .object { animation: emerge 1.8s var(--ease) .5s backwards; }
+  .pill .object { animation-delay: .75s; }
+  .label { animation: titleIn 1.2s var(--ease) 1.2s backwards; }
+  .pill .label { animation-delay: 1.4s; }
+  .cta, header { animation: fadeIn 1s ease-out 1.8s backwards; }
+  .divider { animation: fadeIn 1.6s ease-out .2s backwards; }
+  @keyframes lightsUp { from { opacity: 0; } }
+  @keyframes emerge { from { opacity: 0; filter: brightness(0) blur(8px); } }
+  @keyframes titleIn { from { opacity: 0; transform: translateY(14px); filter: blur(6px); } }
+  @keyframes fadeIn { from { opacity: 0; } }
+
+  /* ---------- Click: minimal exit ---------- */
+  main, header { transition: opacity .5s var(--ease); }
+  body.leaving main, body.leaving header { opacity: 0; }
+  body.leaving .side.chosen .object { transform: scale(1.1); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 760px) {
+    body { overflow: auto; }
+    header { padding: 20px 16px; }
+    main { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; height: auto; min-height: 100dvh; }
+    .side { padding: 90px 16px 40px; min-height: 80dvh; }
+    .divider { left: 16%; right: 16%; top: 50%; bottom: auto; width: auto; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.22), transparent); }
+    .object { height: 42vh; }
+    .bulb .spin { height: 40vh; }
+    .pill .spin { height: auto; width: min(80vw, 340px); }
+    main:has(.side:hover) .side:not(:hover) { opacity: 1; filter: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .grain, .floater, .spin, .shadow { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- Plush textile: frayed edges, puffy volume, curly boucle pile lit from top-left -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="plush" x="-10%" y="-25%" width="120%" height="150%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="4" result="fray"/>
+      <feDisplacementMap in="SourceGraphic" in2="fray" scale="9" xChannelSelector="R" yChannelSelector="G" result="shape"/>
+      <feGaussianBlur in="shape" stdDeviation="7" result="puff"/>
+      <feTurbulence type="turbulence" baseFrequency="0.16" numOctaves="2" seed="11" result="curls"/>
+      <feGaussianBlur in="curls" stdDeviation="0.9" result="loops"/>
+      <feComposite in="loops" in2="puff" operator="arithmetic" k1="0" k2="0.32" k3="0.68" k4="0" result="height"/>
+      <feDiffuseLighting in="height" surfaceScale="6" diffuseConstant="0.9" lighting-color="#fbf9f5" result="lit">
+        <feDistantLight azimuth="235" elevation="42"/>
+      </feDiffuseLighting>
+      <feComponentTransfer in="lit" result="soft">
+        <feFuncR type="linear" slope="0.66" intercept="0.46"/>
+        <feFuncG type="linear" slope="0.66" intercept="0.45"/>
+        <feFuncB type="linear" slope="0.66" intercept="0.43"/>
+      </feComponentTransfer>
+      <feComposite in="soft" in2="shape" operator="in"/>
+    </filter>
+  </svg>
+
+  <header>
+    <a class="logo" href="index.html">SeriesBio</a>
+  </header>
+
+  <main>
+    <div class="divider" aria-hidden="true"></div>
+
+    <section class="side bulb" role="link" tabindex="0" data-href="onboarding.html" aria-label="I'm a startup">
+      <div class="label">
+        <small>For founders</small>
+        <h2 aria-label="Startup"><svg viewBox="0 0 720 190" aria-hidden="true"><text class="plush-text" x="360" y="150" text-anchor="middle">Startup</text></svg></h2>
+      </div>
+      <div class="object">
+        <div class="floater">
+          <div class="spin">
+            <img src="assets/bulb.png" alt="Light bulb with the word Startup inside" draggable="false">
+          </div>
+        </div>
+        <div class="shadow"></div>
+      </div>
+      <div class="cta">Build your Startup CV</div>
+    </section>
+
+    <section class="side pill" role="link" tabindex="0" data-href="investor.html" aria-label="I'm an investor">
+      <div class="label">
+        <small>For investors</small>
+        <h2 aria-label="VC"><svg viewBox="0 0 720 190" aria-hidden="true"><text class="plush-text" x="360" y="150" text-anchor="middle">VC</text></svg></h2>
+      </div>
+      <div class="object">
+        <div class="floater">
+          <div class="spin">
+            <img class="cap" src="assets/pill-cap.png" alt="" draggable="false">
+            <img class="body" src="assets/pill-body.png" alt="Capsule labeled VC filled with banknotes" draggable="false">
+          </div>
+        </div>
+        <div class="shadow"></div>
+      </div>
+      <div class="cta">Find pre-screened deals</div>
+    </section>
+  </main>
+
+<script>
+  document.querySelectorAll(".side").forEach(side => {
+    const go = () => {
+      if (document.body.classList.contains("leaving")) return;
+      side.classList.add("chosen");
+      document.body.classList.add("leaving");
+      setTimeout(() => { location.href = side.dataset.href; }, 500);
+    };
+    side.addEventListener("click", go);
+    side.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+    });
+  });
+
+  // Coming back via the browser's back button restores a clean state
+  addEventListener("pageshow", e => {
+    if (!e.persisted) return;
+    document.body.classList.remove("leaving");
+    document.querySelectorAll(".chosen").forEach(el => el.classList.remove("chosen"));
+  });
+</script>
+</body>
+</html>

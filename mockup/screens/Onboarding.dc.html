@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stage and template</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#F3F5F4}
+*{box-sizing:border-box}
+button,input{font:inherit;color:inherit}
+a{color:#0D6B5E}a:hover{color:#09493F}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #F3F5F4; color: #12201E; font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1.5;">
+
+<header style="background: #FFFFFF; border-bottom: 1px solid #D9E1DF;">
+<div style="max-width: 1280px; margin: 0 auto; padding: 12px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; min-height: 68px;">
+<a href="#" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #12201E;">
+<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="11.5" cy="15" r="8.5" fill="none" stroke="{{accent}}" stroke-width="2.6"></circle><circle cx="18.5" cy="15" r="8.5" fill="none" stroke="#12201E" stroke-width="2.6"></circle></svg>
+<span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em;">BioMatch</span>
+</a>
+<ol aria-label="Setup steps" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px;">
+<li style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: #12201E; color: #FFFFFF; font-weight: 600;">1 Stage and template</li>
+<li style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: #FFFFFF; border: 1px solid #C9D3D0; color: #33433F;">2 Startup CV</li>
+<li style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: #FFFFFF; border: 1px solid #C9D3D0; color: #33433F;">3 Pitch deck</li>
+</ol>
+</div>
+</header>
+
+<main style="max-width: 1280px; margin: 0 auto; padding: 32px 32px 64px; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; flex-direction: column; gap: 10px; max-width: 760px;">
+<p style="margin: 0; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #52615E;">Step 1 of 3</p>
+<h1 style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 36px; line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance;">Tell us where you are. We pick the questions investors ask at your stage.</h1>
+<p style="margin: 0; color: #33433F; text-wrap: pretty;">Your development stage selects the template, so a discovery-stage spin-out is never scored on data it cannot have yet. Your modality adds a short module of its own.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start;">
+
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 28px;">
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 12px;">
+<legend style="padding: 0; margin-bottom: 12px; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">How far is your lead program?</legend>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 10px;">
+<sc-for list="{{trls}}" as="t" hint-placeholder-count="6">
+<sc-if value="{{t.selected}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{t.pick}}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-height: 96px; padding: 14px 16px; border-radius: 12px; border: 2px solid {{accent}}; background: #E1F0EC; text-align: left; cursor: pointer;">
+<span style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 17px; font-weight: 600; color: #0B2F2A;">{{t.trl}}</span><span style="padding: 2px 8px; border-radius: 999px; background: #12201E; color: #FFFFFF; font-size: 12px; font-weight: 500;">{{t.band}}</span></span>
+<span style="font-size: 14px; color: #12201E;">{{t.text}}</span>
+</button>
+</sc-if>
+<sc-if value="{{t.unselected}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{t.pick}}" style="display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-height: 96px; padding: 14px 16px; border-radius: 12px; border: 1px solid #C9D3D0; background: #FFFFFF; text-align: left; cursor: pointer;">
+<span style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px;"><span style="font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 17px; font-weight: 600;">{{t.trl}}</span><span style="padding: 2px 8px; border-radius: 999px; background: #EEF2F1; color: #33433F; font-size: 12px; font-weight: 500;">{{t.band}}</span></span>
+<span style="font-size: 14px; color: #33433F;">{{t.text}}</span>
+</button>
+</sc-if>
+</sc-for>
+</div>
+</fieldset>
+
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 12px;">
+<legend style="padding: 0; margin-bottom: 4px; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">Which modalities do you work with?</legend>
+<p style="margin: 0 0 4px; font-size: 14px; color: #52615E;">Each modality with a module adds three or four questions. Vaccines, radiopharmaceuticals and microbiome use the core questions only.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{{mods}}" as="m" hint-placeholder-count="12">
+<sc-if value="{{m.selected}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-pressed="true" onClick="{{m.toggle}}" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 2px solid {{accent}}; background: #E1F0EC; color: #0B2F2A; font-weight: 500; cursor: pointer;"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><polyline points="3.5,8.5 6.5,11.5 12.5,4.5" fill="none" stroke="#0B4F46" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>{{m.label}}</button>
+</sc-if>
+<sc-if value="{{m.unselected}}" hint-placeholder-val="{{true}}">
+<button type="button" aria-pressed="false" onClick="{{m.toggle}}" style="display: flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 1px solid #C9D3D0; background: #FFFFFF; cursor: pointer;">{{m.label}}</button>
+</sc-if>
+</sc-for>
+</div>
+</fieldset>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 28px;">
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 12px;">
+<legend style="padding: 0; margin-bottom: 12px; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">What kind of company are you?</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{{types}}" as="c" hint-placeholder-count="3">
+<sc-if value="{{c.selected}}" hint-placeholder-val="{{false}}"><button type="button" aria-pressed="true" onClick="{{c.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 2px solid {{accent}}; background: #E1F0EC; color: #0B2F2A; font-weight: 500; cursor: pointer;">{{c.label}}</button></sc-if>
+<sc-if value="{{c.unselected}}" hint-placeholder-val="{{true}}"><button type="button" aria-pressed="false" onClick="{{c.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 1px solid #C9D3D0; background: #FFFFFF; cursor: pointer;">{{c.label}}</button></sc-if>
+</sc-for>
+</div>
+</fieldset>
+<fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 12px;">
+<legend style="padding: 0; margin-bottom: 12px; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; font-weight: 600;">Which round are you raising?</legend>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{{rounds}}" as="r" hint-placeholder-count="6">
+<sc-if value="{{r.selected}}" hint-placeholder-val="{{false}}"><button type="button" aria-pressed="true" onClick="{{r.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 2px solid {{accent}}; background: #E1F0EC; color: #0B2F2A; font-weight: 500; cursor: pointer;">{{r.label}}</button></sc-if>
+<sc-if value="{{r.unselected}}" hint-placeholder-val="{{true}}"><button type="button" aria-pressed="false" onClick="{{r.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 1px solid #C9D3D0; background: #FFFFFF; cursor: pointer;">{{r.label}}</button></sc-if>
+</sc-for>
+</div>
+</fieldset>
+</div>
+</div>
+
+<aside aria-labelledby="template-title" style="flex: 1 1 340px; min-width: 0; background: #FFFFFF; border: 1px solid #D9E1DF; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<p style="margin: 0; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #52615E;">Your template</p>
+<h2 id="template-title" style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 26px; font-weight: 600; letter-spacing: -0.01em;">{{bandTitle}}</h2>
+<p style="margin: 0; font-size: 14px; color: #33433F;">{{bandTrl}}</p>
+</div>
+<dl style="margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+<div style="padding: 12px; border-radius: 10px; background: #F3F5F4; display: flex; flex-direction: column-reverse; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Scored questions</dt><dd style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 28px; font-weight: 700;">{{scored}}</dd></div>
+<div style="padding: 12px; border-radius: 10px; background: #F3F5F4; display: flex; flex-direction: column-reverse; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Required</dt><dd style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 28px; font-weight: 700;">{{required}}</dd></div>
+<div style="padding: 12px; border-radius: 10px; background: #F3F5F4; display: flex; flex-direction: column-reverse; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">Optional bonus</dt><dd style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 28px; font-weight: 700;">{{optional}}</dd></div>
+<div style="padding: 12px; border-radius: 10px; background: #F3F5F4; display: flex; flex-direction: column-reverse; gap: 2px;"><dt style="font-size: 12px; color: #52615E;">About</dt><dd style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 28px; font-weight: 700;">{{minutes}}</dd></div>
+</dl>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<h3 style="margin: 0; font-size: 14px; font-weight: 600;">Modules</h3>
+<div style="display: flex; flex-wrap: wrap; gap: 6px;">
+<sc-for list="{{modules}}" as="md" hint-placeholder-count="1"><span style="padding: 4px 10px; border-radius: 999px; background: #E1F0EC; color: #0B4F46; font-size: 13px; font-weight: 500;">{{md.label}}</span></sc-for>
+<sc-if value="{{noModules}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #52615E;">Core questions only</span></sc-if>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<h3 style="margin: 0; font-size: 14px; font-weight: 600;">Weighs most at this stage</h3>
+<p style="margin: 0; font-size: 14px; color: #33433F;">{{topWeights}}</p>
+<sc-if value="{{cgt}}" hint-placeholder-val="{{false}}"><p style="margin: 0; font-size: 13px; color: #33433F;">Cell and gene therapy: 5 points move from Science to CMC.</p></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<h3 style="margin: 0; font-size: 14px; font-weight: 600;">What investors expect at this stage</h3>
+<ul style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: #33433F;">
+<sc-for list="{{expect}}" as="e" hint-placeholder-count="3"><li>{{e.text}}</li></sc-for>
+</ul>
+</div>
+<sc-if value="{{unusualRound}}" hint-placeholder-val="{{false}}">
+<div style="padding: 12px 14px; border-radius: 10px; background: #FCF1DF; display: flex; gap: 10px; align-items: flex-start;">
+<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="flex: 0 0 auto;"><circle cx="10" cy="10" r="8.5" fill="#FCF1DF" stroke="#A15C07" stroke-width="1.5"></circle><line x1="10" y1="5.5" x2="10" y2="11" stroke="#A15C07" stroke-width="2" stroke-linecap="round"></line><circle cx="10" cy="14" r="1.2" fill="#A15C07"></circle></svg>
+<p style="margin: 0; font-size: 13px; color: #5C3A00;">{{roundWarning}}</p>
+</div>
+</sc-if>
+<p style="margin: 0; padding-top: 4px; border-top: 1px solid #E3E9E7; font-size: 13px; color: #52615E;">You are listed at 60/100 once every required question is answered. Progress saves as you go.</p>
+<a href="Main.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 18px; border-radius: 10px; background: {{accent}}; color: #FFFFFF; font-weight: 600; text-decoration: none;">Start the Startup CV</a>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#0D6B5E","options":["#0D6B5E","#1F4E9A","#6B3FA0","#9A4A12"]},"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.TRL = [
+      ['TRL 1–2', 'Research idea and protocols', 'D1'],
+      ['TRL 3', 'Hypothesis testing, first proof of concept in a limited number of models', 'D1'],
+      ['TRL 4', 'Candidate proof of concept and early safety in a defined model', 'D2'],
+      ['TRL 5', 'Preclinical studies; IND or IMPD in preparation', 'D3'],
+      ['TRL 6', 'IND or IMPD approved; Phase 1 running or done', 'D4'],
+      ['TRL 7', 'Phase 2 completed; Phase 3 planned or running', 'D4']
+    ];
+    this.BANDS = { D1: 'Discovery', D2: 'Lead and candidate', D3: 'IND/CTA-enabling', D4: 'Clinical' };
+    this.MODS = [['Small molecule', 'SM'], ['Antibody', 'BI'], ['Antibody-drug conjugate', 'BI'], ['Other protein or peptide', 'BI'], ['Cell therapy', 'CT'], ['Gene therapy', 'GT'], ['Gene editing', 'GT'], ['RNA (siRNA, ASO)', 'RN'], ['mRNA', 'RN'], ['Vaccine', null], ['Radiopharmaceutical', null], ['Microbiome', null]];
+    this.MODNAMES = { SM: 'Small molecule', BI: 'Biologics', CT: 'Cell therapy', GT: 'Gene therapy and editing', RN: 'RNA and oligonucleotides', PL: 'Platform' };
+    this.TYPES = ['Asset-centric', 'Platform with lead asset', 'Platform only'];
+    this.ROUNDS = ['Pre-seed', 'Seed', 'Series A', 'Series B', 'Series C+', 'Bridge'];
+    this.WEIGHTS = {
+      D1: [['Science', 30], ['Team', 25], ['Product', 10], ['IP', 10], ['Market', 10], ['Regulatory', 5], ['Financing', 5], ['Validation', 5], ['CMC', 0]],
+      D2: [['Science', 25], ['Team', 20], ['Product', 15], ['IP', 10], ['Market', 10], ['Regulatory', 5], ['CMC', 5], ['Financing', 5], ['Validation', 5]],
+      D3: [['Science', 20], ['Team', 15], ['Product', 15], ['IP', 15], ['Regulatory', 10], ['CMC', 10], ['Market', 5], ['Financing', 5], ['Validation', 5]],
+      D4: [['Science', 20], ['Team', 15], ['Regulatory', 15], ['Product', 10], ['IP', 10], ['CMC', 10], ['Market', 10], ['Financing', 5], ['Validation', 5]]
+    };
+    this.EXPECT = {
+      D1: ['Full-time founders and a clearly described unmet need', 'A first proof of concept in a defined model', 'A funded kill/go experiment for the next 12 months'],
+      D2: ['Key result reproduced outside your own lab', 'A Target Product Profile and one lead indication', 'IP owned by the company or exclusively licensed'],
+      D3: ['Freedom-to-operate analysis and a PCT or granted patent', 'A pre-IND or scientific-advice meeting', 'A CDMO and a plan for GMP material'],
+      D4: ['Registered trials with human safety data', 'Expedited designations where eligible', 'A pricing hypothesis and a COGS estimate']
+    };
+    this.M = [["TM01","core","RRRR",1],["TM02","core","RRRR",1],["TM03","core","ORRR",1],["TM04","core","ORRR",1],["TM05","core","ORRR",1],["TM06","core","ORRR",1],["TM07","core","-ORR",1],["SC01","core","RRRR",1],["SC02","core","RRRR",1],["SC03","core","ORRR",1],["SC04","core","ORRR",1],["SC05","core","ORRR",1],["SC06","core","OORR",1],["SC07","core","RRRR",1],["SC08","core","RRRR",1],["PD01","core","RRRR",1],["PD02","core","ORRR",1],["PD03","core","-ORR",1],["PD04","core","RRRR",1],["PD05","core","RRRR",1],["IP01","core","RRRR",1],["IP02","core","RRRR",1],["IP03","core","-ORR",1],["IP04","core","-ORR",1],["IP05","core","OOOO",1],["RC01","core","ORRR",1],["RC02","core","-ORR",1],["RC03","core","OOOO",1],["RC04","core","-ORR",1],["RC05","core","---R",1],["CM01","core","-RRR",1],["CM02","core","--RR",1],["CM03","core","-OOR",1],["CM04","core","-OOO",1],["MK01","core","RRRR",1],["MK02","core","RRRR",1],["MK03","core","RRRR",1],["MK04","core","ORRR",1],["MK05","core","--OR",1],["FN01","core","RRRR",1],["FN02","core","RRRR",1],["FN03","core","OOOO",1],["EV01","core","OOOO",1],["EV02","core","OOOO",1],["EV03","core","OOOO",1],["EV04","core","OOOO",1],["SM01","SM","ORRR",1],["SM02","SM","ORRR",1],["SM03","SM","ORRR",1],["SM04","SM","-ORR",1],["BI01","BI","RRRR",0],["BI02","BI","ORRR",1],["BI03","BI","-ORR",1],["BI04","BI","ORRR",1],["CT01","CT","RRRR",0],["CT02","CT","ORRR",1],["CT03","CT","ORRR",1],["CT04","CT","-ORR",1],["GT01","GT","RRRR",0],["GT02","GT","ORRR",1],["GT03","GT","ORRR",1],["GT04","GT","ORRR",1],["RN01","RN","RRRR",1],["RN02","RN","ORRR",1],["RN03","RN","ORRR",1],["PL01","PL","RRRR",1],["PL02","PL","OOOO",1],["PL03","PL","RRRR",0],["PL04","PL","RRRR",1]];
+    this.state = { trl: 2, mods: ['Small molecule'], type: 'Asset-centric', round: 'Seed' };
+  }
+
+  renderVals() {
+    var self = this;
+    var accent = this.props.accent ?? '#0D6B5E';
+    var band = this.TRL[this.state.trl][2];
+    var bi = ['D1', 'D2', 'D3', 'D4'].indexOf(band);
+    var active = {};
+    this.state.mods.forEach(function (m) {
+      var hit = self.MODS.find(function (x) { return x[0] === m; });
+      if (hit && hit[1]) active[hit[1]] = true;
+    });
+    if (this.state.type !== 'Asset-centric') active.PL = true;
+    var visible = this.M.filter(function (r) { return (r[1] === 'core' || active[r[1]]) && r[2].charAt(bi) !== '-'; });
+    var scored = visible.filter(function (r) { return r[3] === 1; });
+    var required = scored.filter(function (r) { return r[2].charAt(bi) === 'R'; }).length;
+    var optional = scored.length - required;
+    var minutes = Math.max(15, Math.round(scored.length / 5) * 5);
+    var top = this.WEIGHTS[band].slice(0, 3).map(function (w) { return w[0] + ' ' + w[1]; }).join(' · ') + ' of 100 points';
+    var r = this.state.round;
+    var unusual = (r === 'Series A' && bi === 0) || ((r === 'Series B' || r === 'Series C+') && bi <= 1);
+    return {
+      accent: accent,
+      trls: this.TRL.map(function (t, i) {
+        var sel = self.state.trl === i;
+        return { trl: t[0], text: t[1], band: t[2] + ' · ' + self.BANDS[t[2]], selected: sel, unselected: !sel, pick: function () { self.setState({ trl: i }); } };
+      }),
+      mods: this.MODS.map(function (m) {
+        var sel = self.state.mods.indexOf(m[0]) >= 0;
+        return {
+          label: m[0], selected: sel, unselected: !sel,
+          toggle: function () {
+            var cur = self.state.mods;
+            self.setState({ mods: cur.indexOf(m[0]) >= 0 ? cur.filter(function (x) { return x !== m[0]; }) : cur.concat([m[0]]) });
+          }
+        };
+      }),
+      types: this.TYPES.map(function (t) { var sel = self.state.type === t; return { label: t, selected: sel, unselected: !sel, pick: function () { self.setState({ type: t }); } }; }),
+      rounds: this.ROUNDS.map(function (t) { var sel = self.state.round === t; return { label: t, selected: sel, unselected: !sel, pick: function () { self.setState({ round: t }); } }; }),
+      bandTitle: band + ' · ' + this.BANDS[band],
+      bandTrl: this.TRL[this.state.trl][0] + ' – ' + this.TRL[this.state.trl][1],
+      scored: scored.length, required: required, optional: optional, minutes: minutes + ' min',
+      modules: Object.keys(active).map(function (k) { return { label: self.MODNAMES[k] }; }),
+      noModules: Object.keys(active).length === 0,
+      topWeights: top,
+      cgt: !!(active.CT || active.GT),
+      expect: this.EXPECT[band].map(function (t) { return { text: t }; }),
+      unusualRound: unusual,
+      roundWarning: r + ' is unusual for ' + band + '. You can continue; the CV will ask you to confirm it.'
+    };
+  }
+}
+</script>
+</body>
+</html>

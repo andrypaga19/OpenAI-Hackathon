@@ -1,0 +1,64 @@
+TEAM score 35/100 {"science":92,"translational":15,"commercial":30,"entrepreneurial":0,"leadership":23} missing: commercial
+  proof: Upload CV or LinkedIn for Sara Novak to unlock 20 commercial points.
+MARKET TAM €4000M, SAM €2000M. Peak revenue at 1%: €20.0M, 5%: €100M, 10%: €200M. Credible case (base case, 5%): €100M; risk-adjusted ~€2.5M.
+IP06 launch ~2036, protection at launch 8y, points 0.7
+
+GAPS funding_gap, commercial_leadership, ip_licensing, cap_table, syndication
+WANTED VALUE-ADD pharma_network, syndicate_network, grant_expertise, ceo_recruiting, venture_building, tto_negotiation, ip_expertise, cap_table_restructuring
+
+FINDINGS
+  F11 [critical] Round does not reach its milestone: Your €2.0M round plus €0.5M cash = €2.5M. "IND/CTA-enabling complete" typically costs €3.0M-€8.0M for this modality; your burn over 24+6 months needs €2.7M. Gap: €3.0M.
+     -> Increase the round to about €5.5M so it reaches "IND/CTA-enabling complete" with a buffer for the next fundraise.
+     -> Re-scope this round to "Development candidate" (typical cost €1.5M-€4.0M). That fits your €2.0M and creates the data for the next round.
+     -> Structure the round in tranches: €2.0M now until "Development candidate", a second tranche of about €3.5M on that milestone.
+     -> Close part of the gap with non-dilutive funding: GO-Bio (BMBF), HTGF, EIC Pathfinder / Accelerator.
+     -> Use the Syndicate Builder to assemble a lead plus co-investors for €5.5M.
+     impact: readiness +2, avg match +0, best syndicate +9 (rank 6.5)
+  F12 [open_question] Missing competency in the team: Below 40/100 for D2: commercial (30). Team score 35/100.
+     -> Add a CBO/COO with 4+ years in pharma BD, VC or consulting (or a senior commercial advisor as a first step).
+     impact: readiness +4, avg match +6, best syndicate +0 (rank 7)
+  F18 [info] Assumed market share looks optimistic: Assumed 40% share. We use the 5% base case (€100M).
+     -> Show a conservative base case next to your upside case.
+  F18 [info] Market numbers without a source: No source for patients or price.
+     -> Add a source (epidemiology study, registry, comparable drug price).
+  F14 [warning] No exclusive rights to the core IP: Rights to the core IP: option.
+     -> Convert the option or non-exclusive licence into an exclusive licence (or assignment) for the field of use before the round.
+     -> Look for investors with TTO negotiation experience.
+     impact: readiness +2, avg match +3, best syndicate +1 (rank 4)
+  F16 [warning] High institutional equity stake: Institution holds 25% of equity.
+     -> Renegotiate towards a lower stake (milestone payments or royalties instead of equity). Public IP-transfer initiatives in Germany argue for lower institutional stakes.
+     impact: readiness +0, avg match +0, best syndicate +0 (rank 0)
+
+SYNDICATES @ €2.0M
+  #1 score 76: Munich Translational Fund (lead, €1.0M) + Helix Seed Partners (co, €1.0M)
+     Munich Translational Fund leads with €1.0M and covers ip_licensing, cap_table.
+     Helix Seed Partners adds €1.0M and helps with commercial_leadership, ip_licensing, cap_table.
+     Combined follow-on reserves €11.0M vs ~€14.0M expected next round.
+     Round fully covered.
+  #2 score 72: Helix Seed Partners (lead, €0.8M) + Public Seed Fund (co, €1.0M) + Charité Founders Circle (co, €0.2M)
+     Helix Seed Partners leads with €0.8M and covers commercial_leadership, ip_licensing, cap_table.
+     Public Seed Fund adds €1.0M and helps with funding_gap, syndication.
+     Charité Founders Circle adds €0.2M and helps with commercial_leadership, ip_licensing, cap_table.
+     Combined follow-on reserves €5.5M vs ~€14.0M expected next round.
+     Round fully covered.
+  #3 score 69: Public Seed Fund (lead, €0.8M) + Helix Seed Partners (co, €1.2M)
+     Public Seed Fund leads with €0.8M and covers funding_gap, syndication.
+     Helix Seed Partners adds €1.2M and helps with commercial_leadership, ip_licensing, cap_table.
+     Combined follow-on reserves €5.0M vs ~€14.0M expected next round.
+     Round fully covered.
+
+SYNDICATES @ €5.5M (target round from F11)
+  #1 score 85: Helix Seed Partners (lead, €1.5M) + Public Seed Fund (co, €1.0M) + Rhine Pharma Ventures (co, €3.0M)
+     Helix Seed Partners leads with €1.5M and covers commercial_leadership, ip_licensing, cap_table.
+     Public Seed Fund adds €1.0M and helps with funding_gap, syndication.
+     Rhine Pharma Ventures adds €3.0M.
+     Combined follow-on reserves €30.0M vs ~€14.0M expected next round.
+     Round fully covered.
+  #2 score 84: Munich Translational Fund (lead, €2.2M) + Helix Seed Partners (co, €1.5M) + Public Seed Fund (co, €1.0M) + Charité Founders Circle (co, €0.8M) + Spree Angels Health (co, €0.1M)
+     Munich Translational Fund leads with €2.2M and covers ip_licensing, cap_table.
+     Helix Seed Partners adds €1.5M and helps with commercial_leadership, ip_licensing, cap_table.
+     Public Seed Fund adds €1.0M and helps with funding_gap, syndication.
+     Charité Founders Circle adds €0.8M and helps with commercial_leadership, ip_licensing, cap_table.
+     Spree Angels Health adds €0.1M and helps with commercial_leadership, cap_table.
+     Combined follow-on reserves €13.8M vs ~€14.0M expected next round.
+     Round fully covered.
